@@ -194,6 +194,20 @@ button { font-family: inherit; }
 .muted { color: var(--muted); font-size: 13px; }
 .apply-done .btn-primary { margin-top: 24px; max-width: 240px; }
 
+/* 查询结果 */
+.done-result { margin: 20px 0; }
+.result-box { padding: 20px; border-radius: 12px; margin-bottom: 16px; }
+.result-box.approved { background: #e6f6ec; }
+.result-box.rejected { background: #fdeaea; }
+.result-box.pending { background: #fff4e0; }
+.result-icon { width: 48px; height: 48px; border-radius: 50%; margin: 0 auto 12px; font-size: 24px; line-height: 48px; }
+.result-box.approved .result-icon { background: var(--green); color: #fff; }
+.result-box.rejected .result-icon { background: var(--red); color: #fff; }
+.result-box.pending .result-icon { background: #ff9500; color: #fff; }
+.result-title { font-size: 18px; font-weight: 600; margin-bottom: 8px; }
+.result-info { font-size: 14px; color: var(--muted); }
+.result-info strong { color: var(--text); font-size: 20px; }
+
 /* 进度查询 */
 .sec-title { font-size: 18px; font-weight: 600; margin: 0 0 16px; }
 .q-result { margin-top: 16px; display: grid; gap: 12px; }

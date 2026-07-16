@@ -9,7 +9,7 @@
   var STORE_KEY = "jsccb:applications";
   var $ = function (id) { return document.getElementById(id); };
 
-  // 卡种目录
+  // 卡种目录 - 图片与卡种正确对应
   var CARDS = [
     { id: "puka", tier: "普卡", cls: "tier-puka", name: "龙卡正青春信用卡数字版",
       img: "assets/images/card_puka.png",
@@ -21,7 +21,7 @@
       fee: "500元/年", feeNote: "消费7笔免次年年费", limit: "1万-3万",
       benefits: ["新户办卡礼", "12306出行购票", "公共事业缴费"],
       minLimit: 10000, maxLimit: 30000 },
-    { id: "baijin", tier: "白金卡", cls: "tier-baijin", name: "建行生活卡银联版",
+    { id: "baijin", tier: "白金卡", cls: "tier-baijin", name: "建行生活PLUS版",
       img: "assets/images/card_baijin.png",
       fee: "1000元/年", feeNote: "消费12笔免次年年费", limit: "3万-6万",
       benefits: ["新户办卡礼", "新户消费礼", "微信支付消费"],
@@ -185,7 +185,10 @@
   // 开始申请
   function startApply(id) {
     currentCard = CARDS.filter(function (c) { return c.id === id; })[0];
-    if (!currentCard) return;
+    if (!currentCard) {
+      console.error("Card not found:", id);
+      return;
+    }
     
     var p = $("apply-card");
     p.innerHTML = '<img src="' + currentCard.img + '" class="apply-card-img"/>';
@@ -227,7 +230,7 @@
     
     var progress = document.querySelector(".step-progress-bar");
     if (progress) {
-      progress.style.width = (n === 1 ? 50 : 80) + "%";
+      progress.style.width = (n === 1 ? 50 : n === 2 ? 80 : 100) + "%";
     }
     
     var stepCurrent = document.querySelector(".step-current");
@@ -288,11 +291,24 @@
     });
   }
 
-  var doneBack = $("done-back");
-  if (doneBack) {
-    doneBack.addEventListener("click", function () {
-      $("apply-done").classList.add("hidden");
-      showView("home");
+  // 查询进度按钮
+  var doneQuery = $("done-query");
+  if (doneQuery) {
+    doneQuery.addEventListener("click", function () {
+      var appNo = $("done-no").textContent;
+      var list = load();
+      var app = list.filter(function(a) { return a.no === appNo; })[0];
+      var resultDiv = $("done-result");
+      if (app) {
+        if (app.status === "approved") {
+          resultDiv.innerHTML = '<div class="result-box approved"><div class="result-icon">✓</div><div class="result-title">审核通过</div><div class="result-info">初审额度：<strong>' + app.approvedAmount + '</strong> 元</div></div>';
+        } else if (app.status === "rejected") {
+          resultDiv.innerHTML = '<div class="result-box rejected"><div class="result-icon">✗</div><div class="result-title">审核未通过</div></div>';
+        } else {
+          resultDiv.innerHTML = '<div class="result-box pending"><div class="result-icon">⏳</div><div class="result-title">审核中</div><div class="result-info">请稍后查询或联系工作人员</div></div>';
+        }
+        resultDiv.classList.remove("hidden");
+      }
     });
   }
 
