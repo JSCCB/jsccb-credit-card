@@ -1,1 +1,14 @@
-IyBKU0NDQiDCtyDkv6HnlKjljaHlip7nkIbvvIhqc2NjYi1jcmVkaXQtY2FyZO+8iQoK6Z2i5ZCR5a6i5oi355qE5L+h55So5Y2h5Zyo57q/55Sz6K+3IFBXQe+8jOaUr+aMgSAqKuaZruWNoSAvIOmHkeWNoSAvIOeZvemHkeWNoSAvIOmSu+efs+WNoSoqIOWbm+enjeWNoeenjeOAggoKIyMg5Y2h56eN5a+55bqUCnwg5Luj5Y+3IHwg5Y2h56eNIHwg5Y+C6ICD5Y2h6Z2iIHwKfC0tLS0tLXwtLS0tLS18LS0tLS0tLS0tLXwKfCBBMSB8IOaZruWNoSB8IOm+meWNoeasouS6q+S/oeeUqOWNoemTtuiBlOeJiO+8iOm7ke+8iSB8CnwgQjIgfCDph5HljaEgfCDpvpnljaHljYPph4zooYzkv6HnlKjljaHvvIjnu7/vvIkgfAp8IEMzIHwg55m96YeR5Y2hIHwg6b6Z5Y2h5q2j6Z2S5pil5L+h55So5Y2h5pWw5a2X54mI77yI57qiwrfpqazvvIkgfAp8IEQ0IHwg6ZK755+z5Y2hIHwg5bu66KGM55Sf5rS75Y2hUExVU+eJiO+8iOiTncK36bG877yJIHwKCiMjIOWKnuWNoea1geeoiwotICoqRzbvvIjmraXpqqQx77yJKirvvJrljaHniYfnoa7orqQg4oaSIOWinuWAvOacjeWKoemAieaLqSDihpIg6Lqr5Lu95L+h5oGv77yI5aeT5ZCNIC8g5ou86Z+zIC8g6Lqr5Lu96K+B5Y+3IC8g5omL5py65Y+3IC8g6aqM6K+B56CB77yJ4oaSIOWNj+iuruWLvumAiQotICoqSDfvvIjmraXpqqQy77yJKirvvJrlrabljoYgLyDlnKjogYzmg4XlhrUgLyDljZXkvY3lhajnp7AgLyDogYzkuJogLyDlqZrlp7vnirblhrUgLyDlubTmlLblhaUgLyDogZTns7vmlrnlvI8gLyDljZXkvY3lnLDlnYAgLyDkvY/lroXlnLDlnYAgLyDlr4TpgIHlnLDlnYAgLyDpgq7nvJYgLyDpgq7nrrEgLyDnm7Tns7vkurLlsZ7ogZTns7vkuroKLSAqKuatpemqpDMqKu+8muS/oeaBr+ehruiupCDihpIg5o+Q5LqkIOKGkiDnlJ/miJDnlLPor7fnvJblj7fvvIjnirbmgIHvvJrlvoXlrqHmoLjvvIkKCiMjIOi/m+W6puafpeivogrlh63ouqvku73or4Hlj7cgLyDmiYvmnLrlj7cgLyDnlLPor7fnvJblj7fmn6Xor6LlrqHmibnnirbmgIHvvIjlvoXlrqHmoLggLyDlt7LpgJrov4cgLyDlt7Lmi5Lnu53vvInjgIIKCiMjIOaVsOaNruiBlOWKqArnlLPor7fkv53lrZjlnKggYGxvY2FsU3RvcmFnZWAg6ZSuIGBqc2NjYjphcHBsaWNhdGlvbnNg44CC5LiOIGBqc2NjYi13b3JrYmVuY2hg77yISlNDQ0Llt6XkvZzlj7DvvInpg6jnvbLliLDlkIzkuIAgR2l0SHViIFBhZ2VzIOWfn+WQjeWQju+8jOW3peS9nOWPsOOAjOS/oeeUqOWNoeWuoeaguOOAjeWPr+ebtOaOpeivu+WPluW5tuWuoeaJuei/meS6m+eUs+ivt+OAggoKIyMgUFdBCuW3sumFjee9riBgbWFuaWZlc3Qud2VibWFuaWZlc3RgIOS4jiBgc3cuanNg77yM5Y+v44CM5re75Yqg5Yiw5Li75bGP5bmV44CN56a757q/5L2/55So44CCCgojIyDmnKzlnLDov5DooYwKYGBgYmFzaApweXRob24gLW0gaHR0cC5zZXJ2ZXIgODA4MQojIOaJk+W8gCBodHRwOi8vbG9jYWxob3N0OjgwODEKYGBgCg==
+{
+  "name": "JSCCB ?????",
+  "short_name": "JSCCB???",
+  "description": "???????????:??/??/???/?????",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#f4f6fa",
+  "theme_color": "#0a4ea3",
+  "orientation": "portrait",
+  "icons": [
+    { "src": "assets/icons/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
+    { "src": "assets/icons/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "maskable" }
+  ]
+}
