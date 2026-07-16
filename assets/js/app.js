@@ -1,4 +1,4 @@
-/* 建设银行信用卡办理 v7 - GitHub API 同步版 */
+/* 建设银行信用卡办理 v8 - 完整修复版 */
 (function () {
   "use strict";
 
@@ -11,22 +11,22 @@
 
   var CARDS = [
     { id: "puka", tier: "普卡", cls: "tier-puka", name: "龙卡正青春信用卡数字版",
-      img: "assets/images/card_puka.png?v=2",
+      img: "assets/images/card_puka.png?v=3",
       fee: "200元/年", feeNote: "消费5笔免次年年费", limit: "3千-1万",
       benefits: ["新户办卡礼", "云闪付消费立减", "境外笔笔1%返现"],
       minLimit: 3000, maxLimit: 10000 },
     { id: "jinka", tier: "金卡", cls: "tier-jinka", name: "龙卡千里行信用卡",
-      img: "assets/images/card_jinka.png?v=2",
+      img: "assets/images/card_jinka.png?v=3",
       fee: "500元/年", feeNote: "消费7笔免次年年费", limit: "1万-3万",
       benefits: ["新户办卡礼", "12306出行购票", "公共事业缴费"],
       minLimit: 10000, maxLimit: 30000 },
     { id: "baijin", tier: "白金卡", cls: "tier-baijin", name: "建行生活PLUS版",
-      img: "assets/images/card_baijin.png?v=2",
+      img: "assets/images/card_baijin.png?v=3",
       fee: "1000元/年", feeNote: "消费12笔免次年年费", limit: "3万-6万",
       benefits: ["新户办卡礼", "新户消费礼", "微信支付消费"],
       minLimit: 30000, maxLimit: 60000 },
     { id: "zuanshi", tier: "钻石卡", cls: "tier-zuanshi", name: "龙卡欢享信用卡银联版",
-      img: "assets/images/card_zuanshi.png?v=2",
+      img: "assets/images/card_zuanshi.png?v=3",
       fee: "2000元/年", feeNote: "消费20笔免次年年费", limit: "6万-10万",
       benefits: ["新户办卡礼", "笔笔随机返现", "迎新享好礼"],
       minLimit: 60000, maxLimit: 100000 }
@@ -146,14 +146,23 @@
   function renderCardDetail() {
     currentCard = CARDS.filter(function (c) { return c.id === currentCardId; })[0];
     var box = $("card-display");
-    if (!box || !currentCard) return;
-    box.innerHTML = '<div class="apply-card-preview ' + currentCard.cls + '">' +
-      '<img src="' + currentCard.img + '" alt="' + esc(currentCard.name) + '" />' +
-      '</div>' +
-      '<div class="fee-section" id="fee-section">' +
-      '<div class="fee-row"><span class="fee-label">年费</span><span class="fee-value">' + currentCard.fee + '</span></div>' +
-      '<p class="fee-note">' + esc(currentCard.feeNote) + '</p>' +
-      '</div>';
+    var feeContent = $("fee-content");
+    var benefitsList = $("benefits-list");
+    
+    if (box && currentCard) {
+      box.innerHTML = '<div class="apply-card-preview ' + currentCard.cls + '">' +
+        '<img src="' + currentCard.img + '" alt="' + esc(currentCard.name) + '" />' +
+        '</div>';
+    }
+    
+    if (feeContent && currentCard) {
+      feeContent.innerHTML = '<div class="fee-row"><span class="fee-label">年费</span><span class="fee-value">' + currentCard.fee + '</span></div>' +
+        '<p class="fee-note">' + esc(currentCard.feeNote) + '</p>';
+    }
+    
+    if (benefitsList && currentCard) {
+      benefitsList.innerHTML = currentCard.benefits.map(function(b) { return '<li>' + esc(b) + '</li>'; }).join("");
+    }
   }
 
   function showView(name) {
@@ -197,7 +206,39 @@
     if (stepCurrent) stepCurrent.textContent = n;
   }
 
-  function val(form, name) { return (form[name] && form[name].value) || ""; }
+  function val(form, name) { 
+    var el = form.querySelector('[name="' + name + '"]');
+    return el ? el.value : ""; 
+  }
+
+  function setupChipGroup(groupId, hiddenName) {
+    var group = $(groupId);
+    if (!group) return;
+    var chips = group.querySelectorAll(".chip");
+    var hidden = document.querySelector('input[name="' + hiddenName + '"]');
+    
+    chips.forEach(function(chip) {
+      chip.addEventListener("click", function() {
+        chips.forEach(function(c) { c.classList.remove("active"); });
+        chip.classList.add("active");
+        if (hidden) hidden.value = chip.getAttribute("data-value");
+      });
+    });
+  }
+
+  function setupAgreeAll() {
+    var agreeAll = $("agree-all");
+    if (!agreeAll) return;
+    var checkbox = agreeAll.querySelector('input[type="checkbox"]');
+    if (!checkbox) return;
+    
+    checkbox.addEventListener("change", function() {
+      var checked = checkbox.checked;
+      document.querySelectorAll('input[name="agree[]"]').forEach(function(cb) {
+        cb.checked = checked;
+      });
+    });
+  }
 
   function setupSubmit() {
     var btn = document.querySelector(".next-btn2");
@@ -284,12 +325,15 @@
   function init() {
     renderCards();
     
+    // 首页申请按钮
     var btnApply = $("apply-btn");
     if (btnApply) btnApply.addEventListener("click", startApply);
     
+    // 步骤1下一步
     var btnStep1 = document.querySelector(".next-btn");
     if (btnStep1) btnStep1.addEventListener("click", function() { gotoStep(2); });
     
+    // 返回按钮
     var stepBack = $("step-back");
     if (stepBack) {
       stepBack.addEventListener("click", function() {
@@ -298,10 +342,11 @@
       });
     }
     
+    // 验证码按钮
     var codeBtn = $("code-btn");
     if (codeBtn) {
       codeBtn.addEventListener("click", function () {
-        var phone = $("form-step1").phone.value;
+        var phone = val($("form-step1"), "phone");
         if (!/^\d{11}$/.test(phone)) { alert("请输入正确的 11 位手机号"); return; }
         var btn = $("code-btn"), n = 60;
         btn.disabled = true;
@@ -312,10 +357,23 @@
       });
     }
     
+    // Chip 选择组
+    setupChipGroup("edu-group", "edu");
+    setupChipGroup("employ-group", "employ");
+    setupChipGroup("marry-group", "marry");
+    setupChipGroup("contact-group", "contactType");
+    setupChipGroup("mail-group", "mailAddr");
+    
+    // 一键勾选
+    setupAgreeAll();
+    
+    // 提交
     setupSubmit();
+    
+    // 查询
     setupQuery();
     
-    // 初始化城市联动
+    // 城市联动
     var compProv = $("companyProvince");
     var compCity = $("companyCity");
     var homeProv = $("homeProvince");
