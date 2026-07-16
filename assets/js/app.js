@@ -128,7 +128,7 @@
   }
 
   function renderCards() {
-    var nav = $("card-tabs");
+    var nav = document.querySelector(".card-tabs");
     if (!nav) return;
     nav.innerHTML = CARDS.map(function (c) {
       return '<button class="card-tab' + (c.id === currentCardId ? " active" : "") + '" data-card="' + c.id + '">' + c.tier + '</button>';
