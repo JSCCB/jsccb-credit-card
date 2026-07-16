@@ -1,6 +1,6 @@
 /* JSCCB 信用卡办理
  * 申请数据保存在 localStorage 键 `jsccb:applications`，可被同域下的 JSCCB工作台「信用卡审核」读取。
- * 卡种对应：A1=普卡, B2=金卡, C3=白金卡, D4=钻石卡；办卡流程 G6=身份信息步, H7=资料填写步。
+ * 卡种对应：A1=白金卡, B2=金卡, C3=普卡, D4=钻石卡；办卡流程 G6=身份信息步, H7=资料填写步。
  */
 (function () {
   "use strict";
@@ -8,19 +8,20 @@
   var STORE_KEY = "jsccb:applications";
   var $ = function (id) { return document.getElementById(id); };
 
-  // 卡种目录（参考建行信用卡视觉：欢享/千里行/正青春/生活卡PLUS）
+  // 卡种目录（修正后：A1=白金卡, C3=普卡）
+  // 年费规则：普卡200/年(5笔免次年), 金卡500/年(7笔免次年), 白金卡1000/年(12笔免次年), 钻石卡2000/年(20笔免次年)
   var CARDS = [
-    { id: "puka", tier: "A1 · 普卡", cls: "tier-puka", icon: "🐴", name: "龙卡欢享信用卡银联版",
-      no: "6217 **** **** 1001", fee: "免年费", limit: "5千-3万",
-      benefits: ["新户办卡礼", "笔笔随机返现", "迎新享好礼"] },
-    { id: "jinka", tier: "B2 · 金卡", cls: "tier-jinka", icon: "🌾", name: "龙卡千里行信用卡",
-      no: "6217 **** **** 2002", fee: "刷免", limit: "1万-5万",
-      benefits: ["12306 出行购票", "公共事业缴费", "加油返现"] },
-    { id: "baijin", tier: "C3 · 白金卡", cls: "tier-baijin", icon: "🔥", name: "龙卡正青春信用卡数字版",
-      no: "6227 **** **** 3003", fee: "580元/年", limit: "5万-20万",
+    { id: "baijin", tier: "A1 · 白金卡", cls: "tier-baijin", icon: "🐴", name: "龙卡正青春信用卡数字版",
+      no: "6227 **** **** 3003", fee: "1000元/年", feeNote: "消费12笔免次年年费", limit: "3万-6万",
       benefits: ["新户办卡礼", "云闪付消费立减", "境外笔笔1%返现"] },
-    { id: "zuanshi", tier: "D4 · 钻石卡", cls: "tier-zuanshi", icon: "🐟", name: "建行生活卡PLUS版",
-      no: "6227 **** **** 4004", fee: "1800元/年", limit: "20万-100万",
+    { id: "jinka", tier: "B2 · 金卡", cls: "tier-jinka", icon: "🌾", name: "龙卡千里行信用卡",
+      no: "6217 **** **** 2002", fee: "500元/年", feeNote: "消费7笔免次年年费", limit: "1万-3万",
+      benefits: ["12306 出行购票", "公共事业缴费", "加油返现"] },
+    { id: "puka", tier: "C3 · 普卡", cls: "tier-puka", icon: "💳", name: "龙卡欢享信用卡银联版",
+      no: "6217 **** **** 1001", fee: "200元/年", feeNote: "消费5笔免次年年费", limit: "3千-1万",
+      benefits: ["新户办卡礼", "笔笔随机返现", "迎新享好礼"] },
+    { id: "zuanshi", tier: "D4 · 钻石卡", cls: "tier-zuanshi", icon: "💎", name: "建行生活卡PLUS版",
+      no: "6227 **** **** 4004", fee: "2000元/年", feeNote: "消费20笔免次年年费", limit: "6万-10万",
       benefits: ["新户办卡礼", "新户消费礼", "微信支付消费"] }
   ];
 
@@ -73,12 +74,19 @@
         '<div class="cc-chip"></div>' +
         '<div class="cc-no">' + esc(c.no) + "</div>" +
         '<div class="cc-meta"><span>年费 ' + esc(c.fee) + "</span><span>额度 " + esc(c.limit) + "</span></div>" +
+        '<div class="cc-fee-note">' + esc(c.feeNote) + "</div>" +
         '<div class="cc-benefits">' + c.benefits.map(esc).join(" · ") + "</div>" +
         '<button class="cc-apply-btn" data-id="' + c.id + '">立即申请</button>';
       box.appendChild(div);
     });
+    // 绑定点击事件 - 确保能触发
     Array.prototype.forEach.call(box.querySelectorAll(".cc-apply-btn"), function (btn) {
-      btn.addEventListener("click", function () { startApply(btn.getAttribute("data-id")); });
+      btn.addEventListener("click", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var cardId = btn.getAttribute("data-id");
+        startApply(cardId);
+      });
     });
   }
 
@@ -96,10 +104,20 @@
   // 开始申请
   function startApply(id) {
     currentCard = CARDS.filter(function (c) { return c.id === id; })[0];
+    if (!currentCard) {
+      console.error("Card not found:", id);
+      return;
+    }
     var p = $("apply-card-preview");
     p.className = "apply-card-preview " + currentCard.cls;
     p.innerHTML = '<div class="p-tier">' + esc(currentCard.tier) + '</div><div class="p-name">' + esc(currentCard.name) + "</div>";
-    $("form-step1").reset(); $("form-step2").reset();
+    
+    // 重置表单
+    $("form-step1").reset(); 
+    $("form-step2").reset();
+    $("form-step3").classList.add("hidden");
+    $("apply-done").classList.add("hidden");
+    
     gotoStep(1);
     showView("apply");
     window.scrollTo(0, 0);
@@ -107,7 +125,8 @@
 
   function gotoStep(n) {
     [1, 2, 3].forEach(function (i) {
-      $("form-step" + i).classList.toggle("hidden", i !== n);
+      var el = $("form-step" + i);
+      if (el) el.classList.toggle("hidden", i !== n);
     });
     Array.prototype.forEach.call(document.querySelectorAll(".step"), function (s) {
       s.classList.toggle("active", parseInt(s.getAttribute("data-step"), 10) <= n);
@@ -115,28 +134,37 @@
   }
 
   // 步骤1 -> 2
-  $("form-step1").querySelector(".next-btn").addEventListener("click", function () {
-    var f = $("form-step1");
-    if (!f.name.value || !f.nameEn.value || !f.idno.value || !f.phone.value || !f.code.value) {
-      alert("请完整填写身份信息"); return;
-    }
-    if (!/^\d{17}[\dxX]$/.test(f.idno.value)) { alert("身份证号格式不正确"); return; }
-    if (!/^\d{6}$/.test(f.code.value) || f.code.value !== sentCode) { alert("验证码错误"); return; }
-    if (!f.agree.checked) { alert("请先同意相关协议"); return; }
-    gotoStep(2);
-    window.scrollTo(0, 0);
-  });
+  var nextBtn1 = $("form-step1") && $("form-step1").querySelector(".next-btn");
+  if (nextBtn1) {
+    nextBtn1.addEventListener("click", function () {
+      var f = $("form-step1");
+      if (!f.name.value || !f.nameEn.value || !f.idno.value || !f.phone.value || !f.code.value) {
+        alert("请完整填写身份信息"); return;
+      }
+      if (!/^\d{17}[\dxX]$/.test(f.idno.value)) { alert("身份证号格式不正确"); return; }
+      if (!/^\d{6}$/.test(f.code.value) || f.code.value !== sentCode) { alert("验证码错误"); return; }
+      if (!f.agree.checked) { alert("请先同意相关协议"); return; }
+      gotoStep(2);
+      window.scrollTo(0, 0);
+    });
+  }
 
   // 步骤2 -> 3
-  $("form-step2").querySelector(".next-btn2").addEventListener("click", function () {
-    buildReview();
-    gotoStep(3);
-    window.scrollTo(0, 0);
-  });
+  var nextBtn2 = $("form-step2") && $("form-step2").querySelector(".next-btn2");
+  if (nextBtn2) {
+    nextBtn2.addEventListener("click", function () {
+      buildReview();
+      gotoStep(3);
+      window.scrollTo(0, 0);
+    });
+  }
 
-  // 返回
-  document.querySelector(".prev-btn").addEventListener("click", function () { gotoStep(1); });
-  document.querySelector(".prev-btn2").addEventListener("click", function () { gotoStep(2); });
+  // 返回按钮
+  var prevBtn = document.querySelector(".prev-btn");
+  if (prevBtn) prevBtn.addEventListener("click", function () { gotoStep(1); });
+  
+  var prevBtn2 = document.querySelector(".prev-btn2");
+  if (prevBtn2) prevBtn2.addEventListener("click", function () { gotoStep(2); });
 
   function val(form, name) { return (form[name] && form[name].value) || ""; }
 
@@ -168,85 +196,99 @@
   }
 
   // 提交
-  $("form-step3").querySelector(".submit-btn").addEventListener("click", function () {
-    var f1 = $("form-step1"), f2 = $("form-step2");
-    var addons = Array.prototype.map.call(f1.querySelectorAll('input[name=addon]:checked'), function (c) { return c.value; });
-    var app = {
-      no: genNo(),
-      cardTier: currentCard.tier,
-      cardName: currentCard.name,
-      name: val(f1, "name"),
-      nameEn: val(f1, "nameEn"),
-      idno: val(f1, "idno"),
-      phone: val(f1, "phone"),
-      addons: addons,
-      edu: val(f2, "edu"),
-      employ: val(f2, "employ"),
-      company: val(f2, "company"),
-      occupation: val(f2, "occupation"),
-      marry: val(f2, "marry"),
-      income: val(f2, "income"),
-      companyAddr: val(f2, "companyAddr"),
-      homeAddr: val(f2, "homeAddr"),
-      mailAddr: val(f2, "mailAddr"),
-      zip: val(f2, "zip"),
-      email: val(f2, "email"),
-      kinName: val(f2, "kinName"),
-      kinRel: val(f2, "kinRel"),
-      kinPhone: val(f2, "kinPhone"),
-      status: "pending",
-      createdAt: new Date().toISOString()
-    };
-    var list = load();
-    list.push(app);
-    save(list);
-    $("done-no").textContent = app.no;
-    [1, 2, 3].forEach(function (i) { $("form-step" + i).classList.add("hidden"); });
-    $("apply-done").classList.remove("hidden");
-    window.scrollTo(0, 0);
-  });
+  var submitBtn = $("form-step3") && $("form-step3").querySelector(".submit-btn");
+  if (submitBtn) {
+    submitBtn.addEventListener("click", function () {
+      var f1 = $("form-step1"), f2 = $("form-step2");
+      var addons = Array.prototype.map.call(f1.querySelectorAll('input[name=addon]:checked'), function (c) { return c.value; });
+      var app = {
+        no: genNo(),
+        cardTier: currentCard.tier,
+        cardName: currentCard.name,
+        name: val(f1, "name"),
+        nameEn: val(f1, "nameEn"),
+        idno: val(f1, "idno"),
+        phone: val(f1, "phone"),
+        addons: addons,
+        edu: val(f2, "edu"),
+        employ: val(f2, "employ"),
+        company: val(f2, "company"),
+        occupation: val(f2, "occupation"),
+        marry: val(f2, "marry"),
+        income: val(f2, "income"),
+        companyAddr: val(f2, "companyAddr"),
+        homeAddr: val(f2, "homeAddr"),
+        mailAddr: val(f2, "mailAddr"),
+        zip: val(f2, "zip"),
+        email: val(f2, "email"),
+        kinName: val(f2, "kinName"),
+        kinRel: val(f2, "kinRel"),
+        kinPhone: val(f2, "kinPhone"),
+        status: "pending",
+        createdAt: new Date().toISOString()
+      };
+      var list = load();
+      list.push(app);
+      save(list);
+      $("done-no").textContent = app.no;
+      [1, 2, 3].forEach(function (i) { 
+        var el = $("form-step" + i);
+        if (el) el.classList.add("hidden");
+      });
+      $("apply-done").classList.remove("hidden");
+      window.scrollTo(0, 0);
+    });
+  }
 
-  $("done-back").addEventListener("click", function () {
-    $("apply-done").classList.add("hidden");
-    showView("home");
-  });
+  var doneBack = $("done-back");
+  if (doneBack) {
+    doneBack.addEventListener("click", function () {
+      $("apply-done").classList.add("hidden");
+      showView("home");
+    });
+  }
 
   // 验证码（模拟）
-  var codeTimer = null;
-  $("code-btn").addEventListener("click", function () {
-    var phone = $("form-step1").phone.value;
-    if (!/^\d{11}$/.test(phone)) { alert("请输入正确的 11 位手机号"); return; }
-    sentCode = String(Math.floor(Math.random() * 900000) + 100000);
-    alert("验证码已发送（演示）：" + sentCode);
-    var btn = $("code-btn"), n = 60;
-    btn.disabled = true;
-    codeTimer = setInterval(function () {
-      n--; btn.textContent = n + "s";
-      if (n <= 0) { clearInterval(codeTimer); btn.disabled = false; btn.textContent = "获取验证码"; }
-    }, 1000);
-  });
+  var codeBtn = $("code-btn");
+  if (codeBtn) {
+    codeBtn.addEventListener("click", function () {
+      var phone = $("form-step1").phone.value;
+      if (!/^\d{11}$/.test(phone)) { alert("请输入正确的 11 位手机号"); return; }
+      sentCode = String(Math.floor(Math.random() * 900000) + 100000);
+      alert("验证码已发送（演示）：" + sentCode);
+      var btn = $("code-btn"), n = 60;
+      btn.disabled = true;
+      var timer = setInterval(function () {
+        n--; btn.textContent = n + "s";
+        if (n <= 0) { clearInterval(timer); btn.disabled = false; btn.textContent = "获取验证码"; }
+      }, 1000);
+    });
+  }
 
   // 进度查询
-  $("q-btn").addEventListener("click", function () {
-    var q = $("q-input").value.trim().toLowerCase();
-    if (!q) { alert("请输入查询信息"); return; }
-    var list = load().filter(function (a) {
-      return (a.no || "").toLowerCase() === q ||
-             (a.idno || "").toLowerCase() === q ||
-             (a.phone || "").toLowerCase() === q;
+  var qBtn = $("q-btn");
+  if (qBtn) {
+    qBtn.addEventListener("click", function () {
+      var q = $("q-input").value.trim().toLowerCase();
+      if (!q) { alert("请输入查询信息"); return; }
+      var list = load().filter(function (a) {
+        return (a.no || "").toLowerCase() === q ||
+               (a.idno || "").toLowerCase() === q ||
+               (a.phone || "").toLowerCase() === q;
+      });
+      var box = $("q-result");
+      if (!list.length) { box.innerHTML = '<p class="q-empty">未找到申请记录</p>'; return; }
+      box.innerHTML = list.map(function (a) {
+        var st = { pending: "待审核", approved: "已通过", rejected: "已拒绝" }[a.status] || "待审核";
+        var cls = a.status === "approved" ? "approved" : a.status === "rejected" ? "rejected" : "pending";
+        return '<div class="q-item"><div class="q-head"><span class="q-name">' + esc(a.cardName) +
+          '</span><span class="q-status ' + cls + '">' + st + "</span></div>" +
+          '<div class="q-row">申请编号：' + esc(a.no) + "</div>" +
+          '<div class="q-row">申请人：' + esc(a.name) + " / " + esc(a.idno) + "</div>" +
+          '<div class="q-row">提交时间：' + esc(a.createdAt) + "</div></div>";
+      }).join("");
     });
-    var box = $("q-result");
-    if (!list.length) { box.innerHTML = '<p class="q-empty">未找到申请记录</p>'; return; }
-    box.innerHTML = list.map(function (a) {
-      var st = { pending: "待审核", approved: "已通过", rejected: "已拒绝" }[a.status] || "待审核";
-      var cls = a.status === "approved" ? "approved" : a.status === "rejected" ? "rejected" : "pending";
-      return '<div class="q-item"><div class="q-head"><span class="q-name">' + esc(a.cardName) +
-        '</span><span class="q-status ' + cls + '">' + st + "</span></div>" +
-        '<div class="q-row">申请编号：' + esc(a.no) + "</div>" +
-        '<div class="q-row">申请人：' + esc(a.name) + " / " + esc(a.idno) + "</div>" +
-        '<div class="q-row">提交时间：' + esc(a.createdAt) + "</div></div>";
-    }).join("");
-  });
+  }
 
   // 注册 service worker
   if ("serviceWorker" in navigator) {
@@ -255,6 +297,7 @@
     });
   }
 
+  // 初始化
   renderCards();
   renderAddons();
 })();
