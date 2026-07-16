@@ -1,14 +1,1 @@
-{
-  "name": "JSCCB 信用卡办理",
-  "short_name": "JSCCB信用卡",
-  "description": "建信银行信用卡在线办理：普卡/金卡/白金卡/钻石卡申请",
-  "start_url": ".",
-  "display": "standalone",
-  "background_color": "#f4f6fa",
-  "theme_color": "#0a4ea3",
-  "orientation": "portrait",
-  "icons": [
-    { "src": "assets/icons/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
-    { "src": "assets/icons/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "maskable" }
-  ]
-}
+ewogICJuYW1lIjogIkpTQ0NCIOS/oeeUqOWNoeWKnueQhiIsCiAgInNob3J0X25hbWUiOiAiSlNDQ0Lkv6HnlKjljaEiLAogICJkZXNjcmlwdGlvbiI6ICLlu7rkv6Hpk7booYzkv6HnlKjljaHlnKjnur/lip7nkIbvvJrmma7ljaEv6YeR5Y2hL+eZvemHkeWNoS/pkrvnn7PljaHnlLPor7ciLAogICJzdGFydF91cmwiOiAiLiIsCiAgImRpc3BsYXkiOiAic3RhbmRhbG9uZSIsCiAgImJhY2tncm91bmRfY29sb3IiOiAiI2Y0ZjZmYSIsCiAgInRoZW1lX2NvbG9yIjogIiMwYTRlYTMiLAogICJvcmllbnRhdGlvbiI6ICJwb3J0cmFpdCIsCiAgImljb25zIjogWwogICAgeyAic3JjIjogImFzc2V0cy9pY29ucy9pY29uLnN2ZyIsICJzaXplcyI6ICJhbnkiLCAidHlwZSI6ICJpbWFnZS9zdmcreG1sIiwgInB1cnBvc2UiOiAiYW55IiB9LAogICAgeyAic3JjIjogImFzc2V0cy9pY29ucy9pY29uLnN2ZyIsICJzaXplcyI6ICJhbnkiLCAidHlwZSI6ICJpbWFnZS9zdmcreG1sIiwgInB1cnBvc2UiOiAibWFza2FibGUiIH0KICBdCn0K
