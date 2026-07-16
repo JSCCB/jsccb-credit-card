@@ -147,16 +147,24 @@
     currentCard = CARDS.filter(function (c) { return c.id === currentCardId; })[0];
     var box = $("card-display");
     var feeContent = $("fee-content");
+    var homeFeeContent = $("home-fee-content");
     var benefitsList = $("benefits-list");
     
     if (box && currentCard) {
       box.innerHTML = '<div class="apply-card-preview ' + currentCard.cls + '">' +
-        '<img src="' + currentCard.img + '" alt="' + esc(currentCard.name) + '" />' +
+        '<img src="' + currentCard.img + '" alt="' + esc(currentCard.name) + '" class="card-showcase-img" />' +
         '</div>';
     }
     
+    // 申请页年费
     if (feeContent && currentCard) {
       feeContent.innerHTML = '<div class="fee-row"><span class="fee-label">年费</span><span class="fee-value">' + currentCard.fee + '</span></div>' +
+        '<p class="fee-note">' + esc(currentCard.feeNote) + '</p>';
+    }
+    
+    // 选卡页年费
+    if (homeFeeContent && currentCard) {
+      homeFeeContent.innerHTML = '<div class="fee-row"><span class="fee-label">年费</span><span class="fee-value">' + currentCard.fee + '</span></div>' +
         '<p class="fee-note">' + esc(currentCard.feeNote) + '</p>';
     }
     
@@ -181,6 +189,12 @@
     $("apply-done").classList.add("hidden");
     var stepHeader = $("step-header");
     if (stepHeader) stepHeader.classList.remove("hidden");
+    // 填充申请页的卡片预览
+    var applyCard = $("apply-card");
+    if (applyCard && currentCard) {
+      applyCard.innerHTML = '<img src="' + currentCard.img + '" alt="' + esc(currentCard.name) + '" class="apply-card-img" />' +
+        '<div class="apply-card-info"><div class="apply-tier">' + currentCard.tier + '</div><div class="apply-name">' + esc(currentCard.name) + '</div></div>';
+    }
     gotoStep(1);
     showView("apply");
   }

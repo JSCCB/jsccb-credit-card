@@ -7,7 +7,7 @@
   <title>建设银行信用卡</title>
   <link rel="manifest" href="manifest.webmanifest" />
   <link rel="apple-touch-icon" href="assets/images/icon-192.png" />
-  <link rel="stylesheet" href="assets/css/style.css?v=6" />
+  <link rel="stylesheet" href="assets/css/style.css?v=7" />
 </head>
 <body>
   <header class="topbar">
@@ -30,6 +30,12 @@
       
       <!-- 卡片展示 -->
       <div id="card-display" class="card-display"></div>
+      
+      <!-- 年费介绍 -->
+      <div class="fee-section" id="home-fee-section">
+        <h3 class="fee-title">年费介绍</h3>
+        <div class="fee-content" id="home-fee-content"></div>
+      </div>
       
       <!-- 卡片权益 -->
       <div class="card-benefits-section">
@@ -225,7 +231,7 @@
               <option value="香港特别行政区">香港特别行政区</option>
               <option value="澳门特别行政区">澳门特别行政区</option>
             </select>
-            <select name="companyCity" class="city-select">
+            <select name="companyCity" id="companyCity" class="city-select">
               <option value="">城市</option>
             </select>
           </div>
@@ -271,7 +277,7 @@
               <option value="香港特别行政区">香港特别行政区</option>
               <option value="澳门特别行政区">澳门特别行政区</option>
             </select>
-            <select name="homeCity" class="city-select">
+            <select name="homeCity" id="homeCity" class="city-select">
               <option value="">城市</option>
             </select>
           </div>
@@ -326,6 +332,6 @@
     </section>
   </main>
 
-  <script src="assets/js/app.js?v=9"></script>
+  <script src="assets/js/app.js?v=11"></script>
 </body>
 </html>
