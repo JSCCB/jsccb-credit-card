@@ -1,4 +1,4 @@
-/* JSCCB ????? - Service Worker (PWA ????) */
+/* JSCCB 信用卡办理 - Service Worker (PWA 离线缓存) */
 var CACHE = "jsccb-cc-v1";
 var ASSETS = [
   ".",

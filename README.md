@@ -1,14 +1,31 @@
-{
-  "name": "JSCCB ?????",
-  "short_name": "JSCCB???",
-  "description": "???????????:??/??/???/?????",
-  "start_url": ".",
-  "display": "standalone",
-  "background_color": "#f4f6fa",
-  "theme_color": "#0a4ea3",
-  "orientation": "portrait",
-  "icons": [
-    { "src": "assets/icons/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
-    { "src": "assets/icons/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "maskable" }
-  ]
-}
+# JSCCB · 信用卡办理（jsccb-credit-card）
+
+面向客户的信用卡在线申请 PWA，支持 **普卡 / 金卡 / 白金卡 / 钻石卡** 四种卡种。
+
+## 卡种对应
+| 代号 | 卡种 | 参考卡面 |
+|------|------|----------|
+| A1 | 普卡 | 龙卡欢享信用卡银联版（黑） |
+| B2 | 金卡 | 龙卡千里行信用卡（绿） |
+| C3 | 白金卡 | 龙卡正青春信用卡数字版（红·马） |
+| D4 | 钻石卡 | 建行生活卡PLUS版（蓝·鱼） |
+
+## 办卡流程
+- **G6（步骤1）**：卡片确认 → 增值服务选择 → 身份信息（姓名 / 拼音 / 身份证号 / 手机号 / 验证码）→ 协议勾选
+- **H7（步骤2）**：学历 / 在职情况 / 单位全称 / 职业 / 婚姻状况 / 年收入 / 联系方式 / 单位地址 / 住宅地址 / 寄送地址 / 邮编 / 邮箱 / 直系亲属联系人
+- **步骤3**：信息确认 → 提交 → 生成申请编号（状态：待审核）
+
+## 进度查询
+凭身份证号 / 手机号 / 申请编号查询审批状态（待审核 / 已通过 / 已拒绝）。
+
+## 数据联动
+申请保存在 `localStorage` 键 `jsccb:applications`。与 `jsccb-workbench`（JSCCB工作台）部署到同一 GitHub Pages 域名后，工作台「信用卡审核」可直接读取并审批这些申请。
+
+## PWA
+已配置 `manifest.webmanifest` 与 `sw.js`，可「添加到主屏幕」离线使用。
+
+## 本地运行
+```bash
+python -m http.server 8081
+# 打开 http://localhost:8081
+```

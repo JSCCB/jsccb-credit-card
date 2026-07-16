@@ -1,6 +1,6 @@
-/* JSCCB ????? v4
- * ??:??/??/???/???(??????)
- * ??????? localStorage ? `jsccb:applications`
+/* JSCCB 信用卡办理 v4
+ * 卡种：普卡/金卡/白金卡/钻石卡（按此顺序展示）
+ * 申请数据保存在 localStorage 键 `jsccb:applications`
  */
 (function () {
   "use strict";
@@ -8,31 +8,31 @@
   var STORE_KEY = "jsccb:applications";
   var $ = function (id) { return document.getElementById(id); };
 
-  // ???? - ????????????????
+  // 卡种目录 - 按普卡→金卡→白金卡→钻石卡排序
   var CARDS = [
-    { id: "puka", tier: "??", cls: "tier-puka", name: "???????????",
+    { id: "puka", tier: "普卡", cls: "tier-puka", name: "龙卡正青春信用卡数字版",
       img: "assets/images/card_puka.png",
-      fee: "200?/?", feeNote: "??5??????", limit: "3?-1?",
-      benefits: ["?????", "???????", "????1%??"],
+      fee: "200元/年", feeNote: "消费5笔免次年年费", limit: "3千-1万",
+      benefits: ["新户办卡礼", "云闪付消费立减", "境外笔笔1%返现"],
       minLimit: 3000, maxLimit: 10000 },
-    { id: "jinka", tier: "??", cls: "tier-jinka", name: "????????",
+    { id: "jinka", tier: "金卡", cls: "tier-jinka", name: "龙卡千里行信用卡",
       img: "assets/images/card_jinka.png",
-      fee: "500?/?", feeNote: "??7??????", limit: "1?-3?",
-      benefits: ["?????", "12306????", "??????"],
+      fee: "500元/年", feeNote: "消费7笔免次年年费", limit: "1万-3万",
+      benefits: ["新户办卡礼", "12306出行购票", "公共事业缴费"],
       minLimit: 10000, maxLimit: 30000 },
-    { id: "baijin", tier: "???", cls: "tier-baijin", name: "????????",
+    { id: "baijin", tier: "白金卡", cls: "tier-baijin", name: "建行生活卡银联版",
       img: "assets/images/card_baijin.png",
-      fee: "1000?/?", feeNote: "??12??????", limit: "3?-6?",
-      benefits: ["?????", "?????", "??????"],
+      fee: "1000元/年", feeNote: "消费12笔免次年年费", limit: "3万-6万",
+      benefits: ["新户办卡礼", "新户消费礼", "微信支付消费"],
       minLimit: 30000, maxLimit: 60000 },
-    { id: "zuanshi", tier: "???", cls: "tier-zuanshi", name: "??????????",
+    { id: "zuanshi", tier: "钻石卡", cls: "tier-zuanshi", name: "龙卡欢享信用卡银联版",
       img: "assets/images/card_zuanshi.png",
-      fee: "2000?/?", feeNote: "??20??????", limit: "6?-10?",
-      benefits: ["?????", "??????", "?????"],
+      fee: "2000元/年", feeNote: "消费20笔免次年年费", limit: "6万-10万",
+      benefits: ["新户办卡礼", "笔笔随机返现", "迎新享好礼"],
       minLimit: 60000, maxLimit: 100000 }
   ];
 
-  // ??????????????
+  // 供工作台审核时调用的全局函数
   window.JSCCB_CARDS = CARDS;
   window.JSCCB_genApprovedLimit = function (cardId) {
     var c = CARDS.filter(function (x) { return x.id === cardId; })[0];
@@ -62,7 +62,7 @@
     return "CC" + p + r;
   }
 
-  // ????
+  // 视图切换
   function showView(v) {
     ["home", "apply", "progress"].forEach(function (n) {
       $("view-" + n).classList.toggle("hidden", n !== v);
@@ -75,7 +75,7 @@
     b.addEventListener("click", function () { showView(b.getAttribute("data-view")); });
   });
 
-  // ???? - ?????
+  // 渲染卡片 - 按截图样式
   function renderCards() {
     var box = $("card-list");
     box.innerHTML = "";
@@ -86,12 +86,12 @@
         '<div class="cc-img-wrap"><img src="' + c.img + '" alt="' + esc(c.name) + '" class="cc-img"/></div>' +
         '<div class="cc-hot">HOT</div>' +
         '<div class="cc-benefits">' + c.benefits.map(function(b){ return '<span>'+esc(b)+'</span>'; }).join('') + '</div>' +
-        '<button class="cc-apply-btn" data-id="' + c.id + '">????</button>' +
+        '<button class="cc-apply-btn" data-id="' + c.id + '">立即申请</button>' +
         '<div class="cc-dots"><span class="active"></span><span></span><span></span><span></span></div>' +
-        '<div class="cc-more">????</div>';
+        '<div class="cc-more">更多卡片</div>';
       box.appendChild(div);
     });
-    // ??????
+    // 绑定点击事件
     Array.prototype.forEach.call(box.querySelectorAll(".cc-apply-btn"), function (btn) {
       btn.addEventListener("click", function (e) {
         e.preventDefault();
@@ -102,14 +102,14 @@
     });
   }
 
-  // ????
+  // 开始申请
   function startApply(id) {
     currentCard = CARDS.filter(function (c) { return c.id === id; })[0];
     if (!currentCard) {
       console.error("Card not found:", id);
       return;
     }
-    // ??????
+    // 显示预览卡片
     var p = $("apply-card");
     if (!p) {
       console.error("apply-card element not found");
@@ -117,7 +117,7 @@
     }
     p.innerHTML = '<img src="' + currentCard.img + '" class="apply-card-img"/><div class="apply-card-info"><div class="apply-tier">' + esc(currentCard.tier) + '</div><div class="apply-name">' + esc(currentCard.name) + '</div></div>';
     
-    // ????
+    // 重置表单
     $("form-step1").reset(); 
     $("form-step2").reset();
     $("form-step3").classList.add("hidden");
@@ -133,13 +133,13 @@
       var el = $("form-step" + i);
       if (el) el.classList.toggle("hidden", i !== n);
     });
-    // ?????
+    // 更新步骤条
     var steps = document.querySelectorAll(".step");
     steps.forEach(function(s, idx) {
       s.classList.toggle("active", idx < n);
       s.classList.toggle("current", idx === n - 1);
     });
-    // ?????
+    // 更新进度条
     var progress = document.querySelector(".step-progress-bar");
     if (progress) {
       progress.style.width = (n === 1 ? 50 : n === 2 ? 80 : 100) + "%";
@@ -151,30 +151,30 @@
   function buildReview() {
     var f1 = $("form-step1"), f2 = $("form-step2");
     var rows = [
-      ["????", currentCard.tier + " " + currentCard.name],
-      ["??", val(f1, "name")],
-      ["????", val(f1, "nameEn")],
-      ["????", val(f1, "idno")],
-      ["???", val(f1, "phone")],
-      ["??", val(f2, "edu")],
-      ["????", val(f2, "employ")],
-      ["????", val(f2, "company")],
-      ["??", val(f2, "occupation")],
-      ["????", val(f2, "marry")],
-      ["???", val(f2, "income") + "??"],
-      ["????", val(f2, "companyAddr")],
-      ["????", val(f2, "homeAddr")],
-      ["????", val(f2, "mailAddr") === "company" ? "????" : val(f2, "mailAddr") === "home" ? "????" : "??"],
-      ["??", val(f2, "zip")],
-      ["??", val(f2, "email")],
-      ["????", val(f2, "kinName") + " / " + val(f2, "kinRel") + " / " + val(f2, "kinPhone")]
+      ["申请卡种", currentCard.tier + " " + currentCard.name],
+      ["姓名", val(f1, "name")],
+      ["姓名拼音", val(f1, "nameEn")],
+      ["身份证号", val(f1, "idno")],
+      ["手机号", val(f1, "phone")],
+      ["学历", val(f2, "edu")],
+      ["在职情况", val(f2, "employ")],
+      ["单位全称", val(f2, "company")],
+      ["职业", val(f2, "occupation")],
+      ["婚姻状况", val(f2, "marry")],
+      ["年收入", val(f2, "income") + "万元"],
+      ["单位地址", val(f2, "companyAddr")],
+      ["住宅地址", val(f2, "homeAddr")],
+      ["寄送地址", val(f2, "mailAddr") === "company" ? "单位地址" : val(f2, "mailAddr") === "home" ? "住宅地址" : "其他"],
+      ["邮编", val(f2, "zip")],
+      ["邮箱", val(f2, "email")],
+      ["直系亲属", val(f2, "kinName") + " / " + val(f2, "kinRel") + " / " + val(f2, "kinPhone")]
     ];
     $("review").innerHTML = rows.map(function (r) {
       return '<div class="r-row"><span class="r-label">' + esc(r[0]) + '</span><span class="r-val">' + esc(r[1] || "-") + "</span></div>";
     }).join("");
   }
 
-  // ??
+  // 提交
   function setupSubmit() {
     var f3 = $("form-step3");
     if (!f3) return;
@@ -230,24 +230,24 @@
     });
   }
 
-  // ???(??)
+  // 验证码（模拟）
   var codeBtn = $("code-btn");
   if (codeBtn) {
     codeBtn.addEventListener("click", function () {
       var phone = $("form-step1").phone.value;
-      if (!/^\d{11}$/.test(phone)) { alert("?????? 11 ????"); return; }
+      if (!/^\d{11}$/.test(phone)) { alert("请输入正确的 11 位手机号"); return; }
       sentCode = String(Math.floor(Math.random() * 900000) + 100000);
-      alert("??????(??):" + sentCode);
+      alert("验证码已发送（演示）：" + sentCode);
       var btn = $("code-btn"), n = 60;
       btn.disabled = true;
       var timer = setInterval(function () {
         n--; btn.textContent = n + "s";
-        if (n <= 0) { clearInterval(timer); btn.disabled = false; btn.textContent = "?????"; }
+        if (n <= 0) { clearInterval(timer); btn.disabled = false; btn.textContent = "获取验证码"; }
       }, 1000);
     });
   }
 
-  // ??1 -> 2
+  // 步骤1 -> 2
   function setupStep1Next() {
     var f = $("form-step1");
     if (!f) return;
@@ -255,19 +255,19 @@
     if (!btn) return;
     btn.addEventListener("click", function () {
       if (!f.name.value || !f.nameEn.value || !f.idno.value || !f.phone.value || !f.code.value) {
-        alert("?????????"); return;
+        alert("请完整填写身份信息"); return;
       }
-      if (!/^\d{17}[\dxX]$/.test(f.idno.value)) { alert("?????????"); return; }
-      if (!/^\d{6}$/.test(f.code.value) || f.code.value !== sentCode) { alert("?????"); return; }
-      // ????
+      if (!/^\d{17}[\dxX]$/.test(f.idno.value)) { alert("身份证号格式不正确"); return; }
+      if (!/^\d{6}$/.test(f.code.value) || f.code.value !== sentCode) { alert("验证码错误"); return; }
+      // 检查协议
       var agrees = f.querySelectorAll('input[name="agree[]"]:checked');
-      if (agrees.length < 3) { alert("??????????"); return; }
+      if (agrees.length < 3) { alert("请阅读并同意全部协议"); return; }
       gotoStep(2);
       window.scrollTo(0, 0);
     });
   }
 
-  // ??2 -> 3
+  // 步骤2 -> 3
   function setupStep2Next() {
     var f = $("form-step2");
     if (!f) return;
@@ -280,48 +280,48 @@
     });
   }
 
-  // ????
+  // 返回按钮
   var prevBtn = document.querySelector(".prev-btn");
   if (prevBtn) prevBtn.addEventListener("click", function () { gotoStep(1); });
   
   var prevBtn2 = document.querySelector(".prev-btn2");
   if (prevBtn2) prevBtn2.addEventListener("click", function () { gotoStep(2); });
 
-  // ????
+  // 进度查询
   var qBtn = $("q-btn");
   if (qBtn) {
     qBtn.addEventListener("click", function () {
       var q = $("q-input").value.trim().toLowerCase();
-      if (!q) { alert("???????"); return; }
+      if (!q) { alert("请输入查询信息"); return; }
       var list = load().filter(function (a) {
         return (a.no || "").toLowerCase() === q ||
                (a.idno || "").toLowerCase() === q ||
                (a.phone || "").toLowerCase() === q;
       });
       var box = $("q-result");
-      if (!list.length) { box.innerHTML = '<p class="q-empty">???????</p>'; return; }
+      if (!list.length) { box.innerHTML = '<p class="q-empty">未找到申请记录</p>'; return; }
       box.innerHTML = list.map(function (a) {
-        var st = { pending: "???", approved: "???", rejected: "???" }[a.status] || "???";
+        var st = { pending: "待审核", approved: "已通过", rejected: "已拒绝" }[a.status] || "待审核";
         var cls = a.status === "approved" ? "approved" : a.status === "rejected" ? "rejected" : "pending";
-        var limitStr = a.approvedAmount ? "????:" + a.approvedAmount + "?" : "";
+        var limitStr = a.approvedAmount ? "初审额度：" + a.approvedAmount + "元" : "";
         return '<div class="q-item"><div class="q-head"><span class="q-name">' + esc(a.cardName) +
           '</span><span class="q-status ' + cls + '">' + st + "</span></div>" +
-          '<div class="q-row">????:' + esc(a.no) + "</div>" +
-          '<div class="q-row">???:' + esc(a.name) + " / " + esc(a.idno) + "</div>" +
+          '<div class="q-row">申请编号：' + esc(a.no) + "</div>" +
+          '<div class="q-row">申请人：' + esc(a.name) + " / " + esc(a.idno) + "</div>" +
           (limitStr ? '<div class="q-row">' + limitStr + "</div>" : "") +
-          '<div class="q-row">????:' + esc(a.createdAt) + "</div></div>";
+          '<div class="q-row">提交时间：' + esc(a.createdAt) + "</div></div>";
       }).join("");
     });
   }
 
-  // ?? service worker
+  // 注册 service worker
   if ("serviceWorker" in navigator) {
     window.addEventListener("load", function () {
       navigator.serviceWorker.register("sw.js").catch(function () {});
     });
   }
 
-  // ???
+  // 初始化
   function init() {
     renderCards();
     setupStep1Next();
