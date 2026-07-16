@@ -12,22 +12,22 @@
   // 卡种目录 - 图片与卡种正确对应
   var CARDS = [
     { id: "puka", tier: "普卡", cls: "tier-puka", name: "龙卡正青春信用卡数字版",
-      img: "assets/images/card_puka.png",
+      img: "assets/images/card_puka.png?v=2",
       fee: "200元/年", feeNote: "消费5笔免次年年费", limit: "3千-1万",
       benefits: ["新户办卡礼", "云闪付消费立减", "境外笔笔1%返现"],
       minLimit: 3000, maxLimit: 10000 },
     { id: "jinka", tier: "金卡", cls: "tier-jinka", name: "龙卡千里行信用卡",
-      img: "assets/images/card_jinka.png",
+      img: "assets/images/card_jinka.png?v=2",
       fee: "500元/年", feeNote: "消费7笔免次年年费", limit: "1万-3万",
       benefits: ["新户办卡礼", "12306出行购票", "公共事业缴费"],
       minLimit: 10000, maxLimit: 30000 },
     { id: "baijin", tier: "白金卡", cls: "tier-baijin", name: "建行生活PLUS版",
-      img: "assets/images/card_baijin.png",
+      img: "assets/images/card_baijin.png?v=2",
       fee: "1000元/年", feeNote: "消费12笔免次年年费", limit: "3万-6万",
       benefits: ["新户办卡礼", "新户消费礼", "微信支付消费"],
       minLimit: 30000, maxLimit: 60000 },
     { id: "zuanshi", tier: "钻石卡", cls: "tier-zuanshi", name: "龙卡欢享信用卡银联版",
-      img: "assets/images/card_zuanshi.png",
+      img: "assets/images/card_zuanshi.png?v=2",
       fee: "2000元/年", feeNote: "消费20笔免次年年费", limit: "6万-10万",
       benefits: ["新户办卡礼", "笔笔随机返现", "迎新享好礼"],
       minLimit: 60000, maxLimit: 100000 }
@@ -286,6 +286,9 @@
         var el = $("form-step" + i);
         if (el) el.classList.add("hidden");
       });
+      // 隐藏步骤条（去掉返回按钮）
+      var stepHeader = $("step-header");
+      if (stepHeader) stepHeader.classList.add("hidden");
       $("apply-done").classList.remove("hidden");
       window.scrollTo(0, 0);
     });

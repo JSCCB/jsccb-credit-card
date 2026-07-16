@@ -77,7 +77,7 @@
     <!-- 申请 -->
     <section id="view-apply" class="view hidden">
       <!-- 步骤条 -->
-      <div class="step-header">
+      <div class="step-header" id="step-header">
         <div class="step-back" id="step-back">← 返回</div>
         <div class="step-info"><span class="step-current">1</span>/2页</div>
       </div>
@@ -182,9 +182,8 @@
           <span class="chip" data-value="其它电话">其它电话</span>
         </div>
         <input type="hidden" name="contactType" value="单位电话" />
-        <div class="phone-row">
-          <input placeholder="区号" class="small" name="contactArea" />
-          <input placeholder="电话号" name="contactPhone" />
+        <div class="field">
+          <input placeholder="请输入电话号码" name="contactPhone" />
         </div>
 
         <div class="field"><label>单位地址</label>
