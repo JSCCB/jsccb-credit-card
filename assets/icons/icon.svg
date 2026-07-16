@@ -1,7 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
-  <rect width="512" height="512" rx="96" fill="#0a4ea3"/>
-  <rect x="96" y="180" width="320" height="200" rx="24" fill="#073a7a"/>
-  <rect x="128" y="214" width="56" height="40" rx="8" fill="#f5e7b3"/>
-  <text x="136" y="300" font-family="Arial, sans-serif" font-size="30" fill="#ffffff" font-weight="bold">JSCCB</text>
-  <text x="300" y="356" font-family="Arial, sans-serif" font-size="22" fill="#c8102e" font-weight="bold">信用卡</text>
-</svg>

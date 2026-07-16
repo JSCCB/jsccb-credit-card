@@ -8,6 +8,7 @@
   var GITHUB_REPO = "jsccb-workbench";
   var GITHUB_FILE = "applications.json";
   var $ = function (id) { return document.getElementById(id); };
+  var githubSha = null;
 
   var CARDS = [
     { id: "puka", tier: "普卡", cls: "tier-puka", name: "龙卡正青春信用卡数字版",
@@ -85,17 +86,20 @@
     return "CC" + d.getFullYear() + String(d.getMonth() + 1).padStart(2, "0") + String(d.getDate()).padStart(2, "0") + String(Math.floor(Math.random() * 9000) + 1000);
   }
 
+  var githubSha = null;
+
   // 从 GitHub 获取申请列表
   function fetchFromGitHub() {
     var url = "https://api.github.com/repos/" + GITHUB_OWNER + "/" + GITHUB_REPO + "/contents/" + GITHUB_FILE + "?t=" + Date.now();
     return fetch(url, {
       headers: { "Authorization": "token " + GITHUB_TOKEN }
     }).then(function(r) {
-      if (r.status === 404) return [];
+      if (r.status === 404) { githubSha = null; return []; }
       if (!r.ok) throw new Error("HTTP " + r.status);
       return r.json();
     }).then(function(data) {
-      if (Array.isArray(data)) return [];
+      if (Array.isArray(data)) { githubSha = null; return []; }
+      githubSha = data.sha;
       var content = atob(data.content.replace(/\s/g, ""));
       var list = JSON.parse(content);
       saveLocal(list);
@@ -112,17 +116,25 @@
       list.push(app);
       var content = btoa(JSON.stringify(list, null, 2));
       var url = "https://api.github.com/repos/" + GITHUB_OWNER + "/" + GITHUB_REPO + "/contents/" + GITHUB_FILE;
+      var body = {
+        message: "Add credit card application: " + app.no,
+        content: content
+      };
+      if (githubSha) body.sha = githubSha;
       return fetch(url, {
         method: "PUT",
         headers: {
           "Authorization": "token " + GITHUB_TOKEN,
           "Content-Type": "application/json"
         },
-        body: JSON.stringify({
-          message: "Add credit card application: " + app.no,
-          content: content,
-          sha: null
-        })
+        body: JSON.stringify(body)
+      }).then(function(r) {
+        if (!r.ok) throw new Error("HTTP " + r.status);
+        return r.json();
+      }).then(function(data) {
+        githubSha = data.content.sha;
+        saveLocal(list);
+        return data;
       });
     });
   }
