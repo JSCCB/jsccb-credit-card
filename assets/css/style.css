@@ -20,51 +20,52 @@ button { font-family: inherit; }
 
 .container { max-width: 720px; margin: 0 auto; padding: 16px; }
 
-/* 卡片列表 - 按截图样式 */
-.card-list { display: flex; flex-direction: column; gap: 16px; }
-.cc-card {
-  background: var(--card-bg); border-radius: 16px; overflow: hidden;
-  box-shadow: 0 4px 16px rgba(0,0,0,.08);
-}
-.cc-img-wrap { width: 100%; background: linear-gradient(135deg, #007aff, #00c6ff); padding: 0; }
-.cc-img { width: 100%; height: auto; display: block; border-radius: 0; }
-.cc-hot { 
-  position: absolute; 
-  left: 16px; 
-  margin-top: -20px; 
-  background: #ff3b30; 
-  color: #fff; 
-  font-size: 11px; 
-  padding: 2px 8px; 
-  border-radius: 4px;
-  display: inline-block;
-}
-.cc-benefits { 
-  display: flex; 
-  flex-wrap: wrap; 
-  gap: 8px; 
-  padding: 24px 16px 12px;
-  font-size: 13px;
-}
-.cc-benefits span { color: #333; }
-.cc-apply-btn { 
-  display: block;
-  width: calc(100% - 32px);
-  margin: 8px 16px 12px;
-  background: #007aff; 
-  color: #fff; 
+/* 卡种 Tab */
+.card-tabs { display: flex; justify-content: space-around; border-bottom: 1px solid var(--line); margin-bottom: 20px; }
+.card-tab { 
+  background: none; 
   border: none; 
-  border-radius: 24px; 
-  padding: 14px; 
-  font-weight: 600; 
-  font-size: 16px;
+  padding: 12px 16px; 
+  font-size: 15px; 
+  color: var(--muted); 
   cursor: pointer;
+  position: relative;
 }
-.cc-apply-btn:active { background: #0056b3; }
-.cc-dots { display: flex; justify-content: center; gap: 6px; padding: 8px 0; }
-.cc-dots span { width: 6px; height: 6px; border-radius: 50%; background: #c7c7cc; }
-.cc-dots span.active { background: #007aff; }
-.cc-more { text-align: center; color: #007aff; font-size: 13px; padding-bottom: 12px; }
+.card-tab.active { 
+  color: var(--blue); 
+  font-weight: 600;
+}
+.card-tab.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--blue);
+}
+
+/* 卡片展示 */
+.card-display { margin-bottom: 20px; }
+.card-showcase { text-align: center; }
+.card-showcase-img { 
+  width: 100%; 
+  max-width: 340px; 
+  border-radius: 16px; 
+  box-shadow: 0 8px 24px rgba(0,0,0,.15); 
+}
+.card-showcase-info { margin-top: 16px; }
+.card-showcase-name { font-size: 20px; font-weight: 600; margin: 0 0 8px; }
+.card-showcase-fee { font-size: 14px; color: var(--muted); margin: 0 0 8px; }
+.card-showcase-tags { font-size: 13px; color: #999; }
+
+/* 卡片权益 */
+.card-benefits-section { background: #fff; border-radius: 12px; padding: 16px; margin-bottom: 16px; }
+.card-benefits-section .benefits-title { font-size: 16px; font-weight: 600; margin: 0 0 12px; }
+.card-benefits-section .benefits-list { margin: 0; padding-left: 18px; font-size: 14px; color: #333; line-height: 2; }
+
+/* 申请按钮 */
+.apply-btn { margin-bottom: 20px; }
 
 /* 快捷入口 */
 .quick-actions { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin: 20px 0; }
@@ -86,9 +87,9 @@ button { font-family: inherit; }
 .ad-sub { font-size: 13px; opacity: .9; margin-top: 4px; }
 .ad-tag { position: absolute; right: 12px; bottom: 12px; font-size: 10px; opacity: .7; }
 
-/* 步骤条 - 按截图样式 */
+/* 步骤条 */
 .step-header { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; font-size: 14px; }
-.step-back { color: #007aff; }
+.step-back { color: #007aff; cursor: pointer; }
 .step-info { color: var(--muted); }
 .step-current { color: #007aff; font-weight: 600; }
 .step-progress { height: 4px; background: #e5e5ea; border-radius: 2px; margin-bottom: 12px; }
@@ -104,21 +105,12 @@ button { font-family: inherit; }
 .apply-tier { font-size: 12px; color: var(--muted); }
 .apply-name { font-size: 16px; font-weight: 600; margin-top: 4px; }
 
-/* 权益说明 */
-.benefits-section { background: #fff; border-radius: 12px; padding: 16px; margin-bottom: 12px; }
-.benefits-title { font-size: 15px; font-weight: 600; display: flex; justify-content: space-between; align-items: center; }
-.benefits-title .more { font-size: 13px; color: #007aff; font-weight: normal; }
-.benefits-list { margin: 12px 0 0; padding-left: 18px; font-size: 13px; color: #333; line-height: 1.8; }
-.benefits-list li { margin-bottom: 4px; }
-
-/* 增值服务 */
-.addon-section { background: #fff; border-radius: 12px; padding: 16px; margin-bottom: 12px; }
-.addon-title { font-size: 15px; font-weight: 600; margin-bottom: 12px; }
-.addon-list { display: flex; flex-direction: column; gap: 12px; }
-.addon-item { display: flex; align-items: center; font-size: 13px; }
-.addon-name { width: 70px; color: var(--muted); }
-.addon-desc { flex: 1; color: #333; }
-.addon-action { color: #007aff; }
+/* 年费介绍 */
+.fee-section { background: #fff; border-radius: 12px; padding: 16px; margin-bottom: 16px; }
+.fee-title { font-size: 15px; font-weight: 600; margin: 0 0 12px; }
+.fee-content { font-size: 14px; }
+.fee-line { margin: 0 0 4px; color: var(--text); }
+.fee-note { margin: 0; color: var(--muted); font-size: 13px; }
 
 /* 表单 */
 .form-section-title { font-size: 15px; font-weight: 600; margin: 20px 0 12px; color: var(--text); }
@@ -144,7 +136,7 @@ button { font-family: inherit; }
 .agree-list { display: flex; flex-direction: column; gap: 10px; margin: 12px 0 20px; }
 .agree-item { display: flex; align-items: flex-start; gap: 8px; font-size: 12px; color: #333; line-height: 1.5; }
 .agree-item input { margin-top: 2px; }
-.agree-item:first-child { font-weight: 600; }
+#agree-all { font-weight: 600; }
 
 /* 选项芯片 */
 .chip-group { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
@@ -157,7 +149,7 @@ button { font-family: inherit; }
   border: 1px solid transparent;
 }
 .chip input { display: none; }
-.chip.active, .chip:has(input:checked) { 
+.chip.active { 
   background: #007aff; 
   color: #fff; 
 }
@@ -175,10 +167,6 @@ button { font-family: inherit; }
 
 /* 字段提示 */
 .field-hint { font-size: 12px; color: var(--muted); margin: -8px 0 16px; }
-
-/* 表单注释 */
-.form-note { font-size: 12px; color: #666; line-height: 1.6; margin: 16px 0; padding: 12px; background: #f9f9f9; border-radius: 8px; }
-.form-note .optional { color: #007aff; }
 
 /* 按钮 */
 .btn-primary { background: #007aff; color: #fff; border: none; border-radius: 24px; padding: 14px; font-size: 16px; font-weight: 600; cursor: pointer; width: 100%; }

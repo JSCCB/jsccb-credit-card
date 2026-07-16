@@ -1,5 +1,5 @@
-/* JSCCB 信用卡办理 v4
- * 卡种：普卡/金卡/白金卡/钻石卡（按此顺序展示）
+/* JSCCB 信用卡办理 v5
+ * 卡种：普卡/金卡/白金卡/钻石卡（Tab 切换展示）
  * 申请数据保存在 localStorage 键 `jsccb:applications`
  */
 (function () {
@@ -43,7 +43,7 @@
   };
 
   var currentCard = null;
-  var sentCode = null;
+  var currentCardId = "puka"; // 默认选中普卡
 
   function load() {
     try { return JSON.parse(localStorage.getItem(STORE_KEY)) || []; }
@@ -75,29 +75,44 @@
     b.addEventListener("click", function () { showView(b.getAttribute("data-view")); });
   });
 
-  // 渲染卡片 - 按截图样式
-  function renderCards() {
-    var box = $("card-list");
-    box.innerHTML = "";
-    CARDS.forEach(function (c) {
-      var div = document.createElement("div");
-      div.className = "cc-card";
-      div.innerHTML =
-        '<div class="cc-img-wrap"><img src="' + c.img + '" alt="' + esc(c.name) + '" class="cc-img"/></div>' +
-        '<div class="cc-hot">HOT</div>' +
-        '<div class="cc-benefits">' + c.benefits.map(function(b){ return '<span>'+esc(b)+'</span>'; }).join('') + '</div>' +
-        '<button class="cc-apply-btn" data-id="' + c.id + '">立即申请</button>' +
-        '<div class="cc-dots"><span class="active"></span><span></span><span></span><span></span></div>' +
-        '<div class="cc-more">更多卡片</div>';
-      box.appendChild(div);
-    });
-    // 绑定点击事件
-    Array.prototype.forEach.call(box.querySelectorAll(".cc-apply-btn"), function (btn) {
-      btn.addEventListener("click", function (e) {
-        e.preventDefault();
-        e.stopPropagation();
-        var cardId = btn.getAttribute("data-id");
-        startApply(cardId);
+  // 渲染卡片 Tab 切换
+  function renderCardDisplay() {
+    var card = CARDS.filter(function (c) { return c.id === currentCardId; })[0];
+    if (!card) return;
+    
+    // 更新卡片展示
+    var display = $("card-display");
+    display.innerHTML = 
+      '<div class="card-showcase">' +
+        '<img src="' + card.img + '" alt="' + esc(card.name) + '" class="card-showcase-img"/>' +
+        '<div class="card-showcase-info">' +
+          '<h2 class="card-showcase-name">' + esc(card.name) + '</h2>' +
+          '<p class="card-showcase-fee">' + esc(card.fee) + '，' + esc(card.feeNote) + '</p>' +
+          '<p class="card-showcase-tags">中国银联 | ' + esc(card.tier) + ' | 磁条+IC+非接触</p>' +
+        '</div>' +
+      '</div>';
+    
+    // 更新权益列表
+    var benefitsList = $("benefits-list");
+    benefitsList.innerHTML = card.benefits.map(function(b) { 
+      return '<li>' + esc(b) + '</li>'; 
+    }).join('');
+  }
+
+  // Tab 切换
+  function setupTabs() {
+    var tabs = document.querySelectorAll(".card-tab");
+    tabs.forEach(function(tab) {
+      tab.addEventListener("click", function() {
+        var cardId = tab.getAttribute("data-card");
+        currentCardId = cardId;
+        
+        // 更新 Tab 样式
+        tabs.forEach(function(t) { t.classList.remove("active"); });
+        tab.classList.add("active");
+        
+        // 重新渲染
+        renderCardDisplay();
       });
     });
   }
@@ -117,6 +132,14 @@
     }
     p.innerHTML = '<img src="' + currentCard.img + '" class="apply-card-img"/><div class="apply-card-info"><div class="apply-tier">' + esc(currentCard.tier) + '</div><div class="apply-name">' + esc(currentCard.name) + '</div></div>';
     
+    // 显示年费介绍
+    var feeContent = $("fee-content");
+    if (feeContent) {
+      feeContent.innerHTML = 
+        '<p class="fee-line"><strong>' + esc(currentCard.fee) + '</strong></p>' +
+        '<p class="fee-note">' + esc(currentCard.feeNote) + '</p>';
+    }
+    
     // 重置表单
     $("form-step1").reset(); 
     $("form-step2").reset();
@@ -134,7 +157,7 @@
       if (el) el.classList.toggle("hidden", i !== n);
     });
     // 更新步骤条
-    var steps = document.querySelectorAll(".step");
+    var steps = document.querySelectorAll(".step-labels .step");
     steps.forEach(function(s, idx) {
       s.classList.toggle("active", idx < n);
       s.classList.toggle("current", idx === n - 1);
@@ -144,6 +167,9 @@
     if (progress) {
       progress.style.width = (n === 1 ? 50 : n === 2 ? 80 : 100) + "%";
     }
+    // 更新步骤数字
+    var stepCurrent = document.querySelector(".step-current");
+    if (stepCurrent) stepCurrent.textContent = n;
   }
 
   function val(form, name) { return (form[name] && form[name].value) || ""; }
@@ -153,7 +179,6 @@
     var rows = [
       ["申请卡种", currentCard.tier + " " + currentCard.name],
       ["姓名", val(f1, "name")],
-      ["姓名拼音", val(f1, "nameEn")],
       ["身份证号", val(f1, "idno")],
       ["手机号", val(f1, "phone")],
       ["学历", val(f2, "edu")],
@@ -188,7 +213,6 @@
         cardTier: currentCard.tier,
         cardName: currentCard.name,
         name: val(f1, "name"),
-        nameEn: val(f1, "nameEn"),
         idno: val(f1, "idno"),
         phone: val(f1, "phone"),
         edu: val(f2, "edu"),
@@ -230,20 +254,62 @@
     });
   }
 
-  // 验证码（模拟）
+  // 验证码（模拟）- 不弹窗，任意输入都通过
   var codeBtn = $("code-btn");
   if (codeBtn) {
     codeBtn.addEventListener("click", function () {
       var phone = $("form-step1").phone.value;
       if (!/^\d{11}$/.test(phone)) { alert("请输入正确的 11 位手机号"); return; }
-      sentCode = String(Math.floor(Math.random() * 900000) + 100000);
-      alert("验证码已发送（演示）：" + sentCode);
+      // 不弹窗显示验证码
       var btn = $("code-btn"), n = 60;
       btn.disabled = true;
       var timer = setInterval(function () {
         n--; btn.textContent = n + "s";
         if (n <= 0) { clearInterval(timer); btn.disabled = false; btn.textContent = "获取验证码"; }
       }, 1000);
+    });
+  }
+
+  // 一键勾选
+  function setupAgreeAll() {
+    var agreeAll = document.querySelector("#agree-all input");
+    var agrees = document.querySelectorAll('input[name="agree[]"]');
+    
+    if (agreeAll) {
+      agreeAll.addEventListener("change", function() {
+        var checked = agreeAll.checked;
+        agrees.forEach(function(cb) { cb.checked = checked; });
+      });
+    }
+  }
+
+  // 联系方式单选
+  function setupContactGroup() {
+    var group = document.querySelector(".contact-group");
+    if (!group) return;
+    var chips = group.querySelectorAll(".chip");
+    chips.forEach(function(chip) {
+      chip.addEventListener("click", function() {
+        chips.forEach(function(c) { c.classList.remove("active"); });
+        chip.classList.add("active");
+        var input = chip.querySelector("input");
+        if (input) input.checked = true;
+      });
+    });
+  }
+
+  // 寄送地址单选
+  function setupMailGroup() {
+    var group = document.querySelector(".mail-group");
+    if (!group) return;
+    var chips = group.querySelectorAll(".chip");
+    chips.forEach(function(chip) {
+      chip.addEventListener("click", function() {
+        chips.forEach(function(c) { c.classList.remove("active"); });
+        chip.classList.add("active");
+        var input = chip.querySelector("input");
+        if (input) input.checked = true;
+      });
     });
   }
 
@@ -254,11 +320,11 @@
     var btn = f.querySelector(".next-btn");
     if (!btn) return;
     btn.addEventListener("click", function () {
-      if (!f.name.value || !f.nameEn.value || !f.idno.value || !f.phone.value || !f.code.value) {
+      if (!f.name.value || !f.idno.value || !f.phone.value || !f.code.value) {
         alert("请完整填写身份信息"); return;
       }
       if (!/^\d{17}[\dxX]$/.test(f.idno.value)) { alert("身份证号格式不正确"); return; }
-      if (!/^\d{6}$/.test(f.code.value) || f.code.value !== sentCode) { alert("验证码错误"); return; }
+      // 验证码任意输入都通过
       // 检查协议
       var agrees = f.querySelectorAll('input[name="agree[]"]:checked');
       if (agrees.length < 3) { alert("请阅读并同意全部协议"); return; }
@@ -323,10 +389,22 @@
 
   // 初始化
   function init() {
-    renderCards();
+    renderCardDisplay();
+    setupTabs();
+    setupAgreeAll();
+    setupContactGroup();
+    setupMailGroup();
     setupStep1Next();
     setupStep2Next();
     setupSubmit();
+    
+    // 绑定申请按钮
+    var applyBtn = $("apply-btn");
+    if (applyBtn) {
+      applyBtn.addEventListener("click", function() {
+        startApply(currentCardId);
+      });
+    }
   }
 
   if (document.readyState === "loading") {
