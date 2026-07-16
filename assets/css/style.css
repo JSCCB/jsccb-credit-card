@@ -24,20 +24,36 @@ button { font-family: inherit; }
 .card-list { display: grid; gap: 14px; }
 .cc-card {
   border-radius: 16px; padding: 18px; color: #fff; position: relative; overflow: hidden;
-  box-shadow: 0 8px 22px rgba(0,0,0,.18); min-height: 168px; display: flex; flex-direction: column; justify-content: space-between;
+  box-shadow: 0 8px 22px rgba(0,0,0,.18); min-height: 200px; display: flex; flex-direction: column; justify-content: space-between;
 }
 .cc-card .tier { font-size: 12px; opacity: .9; letter-spacing: 1px; }
 .cc-card .cc-name { font-size: 19px; font-weight: 700; margin-top: 4px; }
 .cc-card .cc-icon { position: absolute; right: 14px; top: 14px; font-size: 34px; opacity: .9; }
 .cc-card .cc-chip { width: 38px; height: 28px; border-radius: 6px; background: linear-gradient(135deg,#f5e7b3,#d9b65a); margin-top: 8px; }
 .cc-card .cc-no { font-family: "Courier New", monospace; letter-spacing: 2px; font-size: 15px; margin-top: 10px; }
-.cc-card.tier-puka { background: linear-gradient(135deg,#1c1c22,#3a3a44); }
+.cc-card.tier-puka { background: linear-gradient(135deg,#2c3e50,#4a5568); }
 .cc-card.tier-jinka { background: linear-gradient(135deg,#1f7a3d,#3fae5e); }
 .cc-card.tier-baijin { background: linear-gradient(135deg,#b5121f,#e23b3b); }
 .cc-card.tier-zuanshi { background: linear-gradient(135deg,#0a3a6b,#1773c9); }
 .cc-meta { display: flex; gap: 14px; margin-top: 12px; font-size: 12px; opacity: .92; }
+.cc-fee-note { font-size: 11px; opacity: .85; margin-top: 4px; }
 .cc-benefits { font-size: 12px; line-height: 1.7; margin-top: 8px; opacity: .95; }
-.cc-apply-btn { margin-top: 12px; align-self: flex-start; background: #fff; color: var(--blue); border: none; border-radius: 20px; padding: 8px 18px; font-weight: 600; cursor: pointer; }
+.cc-apply-btn { 
+  margin-top: 14px; 
+  align-self: flex-start; 
+  background: #fff; 
+  color: var(--blue); 
+  border: none; 
+  border-radius: 20px; 
+  padding: 10px 24px; 
+  font-weight: 600; 
+  font-size: 15px;
+  cursor: pointer; 
+  box-shadow: 0 2px 8px rgba(0,0,0,.15);
+  transition: transform 0.1s;
+}
+.cc-apply-btn:hover { transform: translateY(-1px); }
+.cc-apply-btn:active { transform: scale(0.98); }
 
 /* 步骤条 */
 .steps { display: flex; gap: 8px; margin: 6px 0 18px; }
