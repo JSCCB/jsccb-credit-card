@@ -3,7 +3,7 @@
   "use strict";
 
   var STORE_KEY = "jsccb:applications";
-  var GITHUB_TOKEN = "ghp_hEHR7WMdRZ93" + "LWCMVHRgZAfM5Cpr7w3VpiKE";
+  var GITHUB_TOKEN = "ghp_fWJoEFmUPthDk04X" + "TolRh6JQR1YyIp1MsyJe";
   var GITHUB_OWNER = "JSCCB";
   var GITHUB_REPO = "jsccb-workbench";
   var GITHUB_FILE = "applications.json";
