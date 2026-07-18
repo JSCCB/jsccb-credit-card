@@ -843,8 +843,7 @@
     }
     var card = CARDS.filter(function(c){ return c.id === app.cardId; })[0] || CARDS[0];
     $("fee-card-name").textContent = card.name + "（" + card.tier + "）";
-    $("fee-card-fee").textContent = card.fee;
-    $("fee-card-note").textContent = card.feeNote;
+    $("fee-card-fee").textContent = card.fee.replace("元", "") + "，" + card.feeNote;
     document.querySelectorAll(".view").forEach(function(v){ v.classList.add("hidden"); });
     $("view-fee").classList.remove("hidden");
     window.scrollTo(0, 0);
@@ -989,16 +988,6 @@
       });
     }
     
-    // 返回首页
-    var backHome = $("back-home");
-    if (backHome) {
-      backHome.addEventListener("click", function() {
-        document.querySelectorAll(".view").forEach(function(v){ v.classList.add("hidden"); });
-        $("view-home").classList.remove("hidden");
-        window.scrollTo(0, 0);
-      });
-    }
-
     
 
     // 城市联动
