@@ -314,12 +314,43 @@
 
       <!-- 完成 -->
       <div id="apply-done" class="apply-done hidden">
-        <div class="done-icon">✓</div>
-        <h3>申请已提交</h3>
-        <p>申请编号：<b id="done-no"></b></p>
-        <p class="muted" id="done-status">状态：待审核</p>
+        <div class="done-banner">
+          <div class="done-icon-circle"><span class="clock-icon">🕐</span></div>
+          <div class="done-status">审核中</div>
+          <div class="done-sub">资料提交中，预计等待2-3分钟</div>
+        </div>
+        <div class="done-card">
+          <p class="done-tip">补充资料后，可提升额度及审核通过率</p>
+          <div class="timeline">
+            <div class="tl-item done">
+              <div class="tl-dot">✓</div>
+              <div class="tl-content">
+                <div class="tl-title">已提交申请</div>
+                <div class="tl-sub">额度审批中，请排队等候</div>
+              </div>
+            </div>
+            <div class="tl-item done">
+              <div class="tl-dot">✓</div>
+              <div class="tl-content">
+                <div class="tl-title-row">
+                  <span class="tl-title">配合客户经理补充资料</span>
+                  <span class="tl-badge">待提交</span>
+                </div>
+                <div class="tl-sub">下一步由客户经理操作，补充完将自动提交</div>
+              </div>
+            </div>
+            <div class="tl-item pending">
+              <div class="tl-dot"></div>
+              <div class="tl-content">
+                <div class="tl-title tl-pending">审批成功</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <p class="done-no-row">申请编号：<b id="done-no"></b></p>
+        <p class="muted hidden" id="done-status">状态：待审核</p>
         <div id="done-result" class="done-result hidden"></div>
-        <button class="btn-primary" id="done-query">查询进度</button>
+        <button class="btn-primary done-query-btn" id="done-query">查询进度</button>
       </div>
     </section>
 

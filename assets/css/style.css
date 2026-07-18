@@ -220,3 +220,110 @@ button { font-family: inherit; }
 .q-status.rejected { background: #fdeaea; color: var(--red); }
 .q-item .q-row { font-size: 13px; color: var(--muted); padding: 3px 0; }
 .q-empty { text-align: center; color: var(--muted); padding: 24px 0; }
+
+/* 提交完成 - 顶部蓝色横幅 */
+.apply-done { padding: 0 0 20px; }
+.done-banner {
+  background: linear-gradient(180deg, #0a4ea3 0%, #1976d2 100%);
+  color: #fff;
+  padding: 36px 20px 40px;
+  margin: -16px -16px 18px;
+  text-align: center;
+  border-radius: 0 0 16px 16px;
+}
+.done-icon-circle {
+  width: 56px;
+  height: 56px;
+  margin: 0 auto 12px;
+  background: rgba(255,255,255,0.15);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.clock-icon { font-size: 28px; line-height: 1; }
+.done-status { font-size: 20px; font-weight: 600; margin-bottom: 6px; }
+.done-sub { font-size: 14px; opacity: 0.92; }
+
+/* 白色卡片 - 时间线 */
+.done-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 18px 18px 20px;
+  margin: 0 0 18px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+.done-tip { font-size: 14px; color: #333; margin: 0 0 18px; }
+.timeline { position: relative; }
+.tl-item {
+  position: relative;
+  padding-left: 38px;
+  padding-bottom: 22px;
+}
+.tl-item:last-child { padding-bottom: 0; }
+.tl-item:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  left: 13px;
+  top: 28px;
+  bottom: -2px;
+  width: 2px;
+  background: #e5e5ea;
+}
+.tl-dot {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--blue);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: bold;
+  line-height: 1;
+}
+.tl-item.pending .tl-dot {
+  background: #fff;
+  border: 2px solid #d0d0d0;
+  width: 26px;
+  height: 26px;
+  top: 1px;
+}
+.tl-content { min-height: 28px; }
+.tl-title { font-size: 15px; font-weight: 600; color: #333; margin-bottom: 4px; }
+.tl-item.pending .tl-title { color: #999; font-weight: 500; }
+.tl-sub { font-size: 13px; color: #999; line-height: 1.5; }
+.tl-title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+  gap: 8px;
+}
+.tl-title-row .tl-title { margin-bottom: 0; }
+.tl-badge {
+  font-size: 12px;
+  color: #999;
+  background: #f5f5f5;
+  padding: 2px 8px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+
+.done-no-row {
+  text-align: center;
+  font-size: 14px;
+  color: #333;
+  margin: 8px 0 14px;
+}
+.done-no-row b {
+  color: var(--blue);
+  font-weight: 600;
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+  letter-spacing: 0.5px;
+}
+.done-query-btn { margin-top: 4px; }
