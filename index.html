@@ -7,7 +7,7 @@
   <title>建设银行信用卡</title>
   <link rel="manifest" href="manifest.webmanifest" />
   <link rel="apple-touch-icon" href="assets/images/icon-192.png" />
-  <link rel="stylesheet" href="assets/css/style.css?v=7" />
+  <link rel="stylesheet" href="assets/css/style.css?v=87" />
 </head>
 <body>
   <header class="topbar">
@@ -381,8 +381,46 @@
         <button class="btn-activate" id="r-activate">激活寄卡</button>
       </div>
     </section>
+  
+    <!-- 年费缴纳 -->
+    <section id="view-fee" class="view hidden">
+      <div class="fee-payment">
+        <h2 class="fee-title-main">年费缴纳</h2>
+        <div class="fee-card-info">
+          <div class="fee-card-row"><span class="fee-card-label">所选卡种</span><span class="fee-card-value" id="fee-card-name">--</span></div>
+          <div class="fee-card-row"><span class="fee-card-label">年费标准</span><span class="fee-card-value" id="fee-card-fee">--</span></div>
+          <div class="fee-card-row"><span class="fee-card-label">免年费条件</span><span class="fee-card-value" id="fee-card-note">--</span></div>
+        </div>
+        <div class="fee-qr-section">
+          <p class="fee-qr-title">扫码缴纳年费</p>
+          <img src="assets/images/qr-fee.png" alt="缴费二维码" class="fee-qr-img" id="fee-qr-img" />
+          <p class="fee-qr-hint">请使用微信或支付宝扫码支付</p>
+        </div>
+        <button class="btn-primary btn-fee-submit" id="fee-submit">我已缴费，确认提交</button>
+      </div>
+    </section>
+
+    <!-- 提交成功 -->
+    <section id="view-success" class="view hidden">
+      <div class="success-page">
+        <div class="success-icon">
+          <svg viewBox="0 0 100 100" class="success-svg">
+            <circle cx="50" cy="50" r="45" fill="none" stroke="#52c41a" stroke-width="4"/>
+            <path d="M30 52 L45 67 L70 35" fill="none" stroke="#52c41a" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <h2 class="success-title">提交成功</h2>
+        <p class="success-sub">您的信用卡申请已提交成功，我们将尽快为您寄送卡片</p>
+        <div class="success-info">
+          <div class="s-row"><span class="s-label">申请编号</span><span class="s-value" id="s-no">--</span></div>
+          <div class="s-row"><span class="s-label">申请卡种</span><span class="s-value" id="s-card">--</span></div>
+        </div>
+        <button class="btn-primary btn-back-home" id="back-home">返回首页</button>
+      </div>
+    </section>
+
   </main>
 
-  <script src="assets/js/app.js?v=12"></script>
+  <script src="assets/js/app.js?v=812"></script>
 </body>
 </html>
