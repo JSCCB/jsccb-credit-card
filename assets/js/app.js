@@ -324,28 +324,69 @@
     });
   }
 
-  // 查询进度
+  // 查询进度 - 弹出输入框
   function setupQuery() {
     var doneQuery = $("done-query");
     if (doneQuery) {
       doneQuery.addEventListener("click", function () {
-        var appNo = $("done-no").textContent;
-        fetchFromGitHub().then(function(list) {
-          var app = list.filter(function(a) { return a.no === appNo; })[0];
-          var resultDiv = $("done-result");
-          if (app) {
-            if (app.status === "approved") {
-              resultDiv.innerHTML = '<div class="result-box approved"><div class="result-icon">✓</div><div class="result-title">审核通过</div><div class="result-info">初审额度：<strong>' + (app.approvedAmount || "--") + '</strong> 元</div></div>';
-            } else if (app.status === "rejected") {
-              resultDiv.innerHTML = '<div class="result-box rejected"><div class="result-icon">✗</div><div class="result-title">审核未通过</div></div>';
-            } else {
-              resultDiv.innerHTML = '<div class="result-box pending"><div class="result-icon">⏳</div><div class="result-title">审核中</div><div class="result-info">请稍后查询或联系工作人员</div></div>';
-            }
-            resultDiv.classList.remove("hidden");
-          }
-        });
+        showQueryModal();
       });
     }
+  }
+
+  function showQueryModal() {
+    closeQueryModal();
+    var mask = document.createElement("div");
+    mask.className = "query-modal-mask";
+    mask.id = "query-modal-mask";
+    mask.innerHTML =
+      '<div class="query-modal">' +
+        '<h4>查询申请进度</h4>' +
+        '<input class="qm-input" id="qm-input" placeholder="请输入申请编号" />' +
+        '<div class="qm-actions">' +
+          '<button class="qm-cancel" id="qm-cancel">取消</button>' +
+          '<button class="qm-ok" id="qm-ok">查询</button>' +
+        '</div>' +
+      '</div>';
+    document.body.appendChild(mask);
+    var input = $("qm-input");
+    input.focus();
+    input.addEventListener("keydown", function(e) {
+      if (e.key === "Enter") doQuery();
+    });
+    $("qm-cancel").addEventListener("click", closeQueryModal);
+    $("qm-ok").addEventListener("click", doQuery);
+    mask.addEventListener("click", function(e) {
+      if (e.target === mask) closeQueryModal();
+    });
+  }
+
+  function closeQueryModal() {
+    var m = $("query-modal-mask");
+    if (m) m.remove();
+  }
+
+  function doQuery() {
+    var no = $("qm-input").value.trim();
+    if (!no) { alert("请输入申请编号"); return; }
+    closeQueryModal();
+    var resultDiv = $("done-result");
+    resultDiv.classList.remove("hidden");
+    resultDiv.innerHTML = '<div class="result-box pending"><div class="result-icon">⏳</div><div class="result-title">查询中...</div></div>';
+    fetchFromGitHub().then(function(list) {
+      var app = list.filter(function(a) { return a.no === no; })[0];
+      if (!app) {
+        resultDiv.innerHTML = '<div class="result-box rejected"><div class="result-icon">!</div><div class="result-title">未找到该申请</div><div class="result-info">请检查申请编号是否正确</div></div>';
+        return;
+      }
+      if (app.status === "approved") {
+        resultDiv.innerHTML = '<div class="result-box approved"><div class="result-icon">✓</div><div class="result-title">审核通过</div><div class="result-info">初审额度：<strong>' + (app.approvedAmount || "--") + '</strong> 元</div></div>';
+      } else if (app.status === "rejected") {
+        resultDiv.innerHTML = '<div class="result-box rejected"><div class="result-icon">✗</div><div class="result-title">审核未通过</div></div>';
+      } else {
+        resultDiv.innerHTML = '<div class="result-box pending"><div class="result-icon">⏳</div><div class="result-title">审核中</div><div class="result-info">请稍后查询或联系工作人员</div></div>';
+      }
+    });
   }
 
   function init() {

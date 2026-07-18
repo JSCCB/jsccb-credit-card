@@ -314,14 +314,67 @@ button { font-family: inherit; }
 
 .done-no-row {
   text-align: center;
-  font-size: 14px;
+  font-size: 16px;
   color: #333;
   margin: 8px 0 14px;
+  font-weight: 700;
 }
 .done-no-row b {
   color: var(--blue);
   font-weight: 600;
-  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+  font-size: 16px;
   letter-spacing: 0.5px;
 }
 .done-query-btn { margin-top: 4px; }
+
+/* 查询进度 弹窗 */
+.query-modal-mask {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.45);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+.query-modal {
+  background: #fff;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 360px;
+  padding: 22px 20px 18px;
+  box-shadow: 0 8px 24px rgba(0,0,0,.18);
+}
+.query-modal h4 {
+  margin: 0 0 14px;
+  font-size: 16px;
+  font-weight: 600;
+  text-align: center;
+}
+.query-modal .qm-input {
+  width: 100%;
+  border: 1px solid #d0d0d0;
+  border-radius: 8px;
+  padding: 12px 14px;
+  font-size: 15px;
+  outline: none;
+  box-sizing: border-box;
+  margin-bottom: 14px;
+}
+.query-modal .qm-input:focus { border-color: var(--blue); }
+.query-modal .qm-actions {
+  display: flex;
+  gap: 10px;
+}
+.query-modal .qm-actions button {
+  flex: 1;
+  border: none;
+  border-radius: 8px;
+  padding: 11px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.query-modal .qm-cancel { background: #f2f2f7; color: #333; }
+.query-modal .qm-ok { background: var(--blue); color: #fff; }
