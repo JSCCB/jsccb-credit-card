@@ -398,8 +398,7 @@
         submitToGitHub(app).catch(function(){});
         showResultPage(app);
       } else {
-        var remain = Math.ceil((APPROVE_DELAY - elapsed) / 1000);
-        resultDiv.innerHTML = '<div class="result-box pending"><div class="result-icon">⏳</div><div class="result-title">审核中</div><div class="result-info">还剩 ' + remain + ' 秒自动审批，请稍后查询</div></div>';
+        resultDiv.innerHTML = '<div class="result-box pending"><div class="result-icon">⏳</div><div class="result-title">审核中</div><div class="result-info">请稍后查询或联系客户经理</div></div>';
       }
     });
   }
