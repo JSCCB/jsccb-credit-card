@@ -378,3 +378,53 @@ button { font-family: inherit; }
 }
 .query-modal .qm-cancel { background: #f2f2f7; color: #333; }
 .query-modal .qm-ok { background: var(--blue); color: #fff; }
+
+/* 初审通过页 */
+.result-success { padding: 30px 0 24px; text-align: center; }
+.result-check {
+  width: 72px;
+  height: 72px;
+  margin: 0 auto 18px;
+  border-radius: 50%;
+  background: var(--green);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(52,199,89,.3);
+}
+.result-tick { color: #fff; font-size: 38px; font-weight: bold; line-height: 1; }
+.result-title { font-size: 22px; font-weight: 700; margin: 0 0 8px; color: #1c1c1e; }
+.result-sub { font-size: 14px; color: var(--muted); margin: 0 0 24px; }
+.result-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 4px 18px;
+  margin-bottom: 28px;
+  box-shadow: 0 2px 10px rgba(0,0,0,.05);
+  text-align: left;
+}
+.result-card .r-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--line);
+  font-size: 15px;
+}
+.result-card .r-row:last-child { border-bottom: none; }
+.result-card .r-label { color: #1c1c1e; flex: 0 0 auto; }
+.result-card .r-value { color: #1c1c1e; text-align: right; word-break: break-all; }
+.result-card .r-amount { font-size: 22px; font-weight: 700; }
+.btn-activate {
+  width: 100%;
+  background: var(--red);
+  color: #fff;
+  border: none;
+  border-radius: 28px;
+  padding: 15px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(255,59,48,.25);
+}
+.btn-activate:active { background: #d92d20; }

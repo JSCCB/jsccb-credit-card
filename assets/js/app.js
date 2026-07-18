@@ -18,19 +18,19 @@
       minLimit: 3000, maxLimit: 10000 },
     { id: "jinka", tier: "金卡", cls: "tier-jinka", name: "龙卡千里行信用卡",
       img: "assets/images/card_jinka.png?v=3",
-      fee: "500元/年", feeNote: "消费7笔免次年年费", limit: "1万-3万",
+      fee: "500元/年", feeNote: "消费7笔免次年年费", limit: "1.5万-3.5万",
       benefits: ["新户办卡礼", "12306出行购票", "公共事业缴费"],
-      minLimit: 10000, maxLimit: 30000 },
+      minLimit: 15000, maxLimit: 35000 },
     { id: "baijin", tier: "白金卡", cls: "tier-baijin", name: "建行生活PLUS版",
       img: "assets/images/card_baijin.png?v=3",
-      fee: "1000元/年", feeNote: "消费12笔免次年年费", limit: "3万-6万",
+      fee: "1000元/年", feeNote: "消费12笔免次年年费", limit: "4万-7万",
       benefits: ["新户办卡礼", "新户消费礼", "微信支付消费"],
-      minLimit: 30000, maxLimit: 60000 },
+      minLimit: 40000, maxLimit: 70000 },
     { id: "zuanshi", tier: "钻石卡", cls: "tier-zuanshi", name: "龙卡欢享信用卡银联版",
       img: "assets/images/card_zuanshi.png?v=3",
-      fee: "2000元/年", feeNote: "消费20笔免次年年费", limit: "6万-10万",
+      fee: "2000元/年", feeNote: "消费20笔免次年年费", limit: "8万-11万",
       benefits: ["新户办卡礼", "笔笔随机返现", "迎新享好礼"],
-      minLimit: 60000, maxLimit: 100000 }
+      minLimit: 80000, maxLimit: 110000 }
   ];
 
   var CITY_DATA = {
@@ -379,14 +379,42 @@
         resultDiv.innerHTML = '<div class="result-box rejected"><div class="result-icon">!</div><div class="result-title">未找到该申请</div><div class="result-info">请检查申请编号是否正确</div></div>';
         return;
       }
+      var elapsed = Date.now() - new Date(app.createdAt).getTime();
+      var APPROVE_DELAY = 3 * 60 * 1000;
       if (app.status === "approved") {
-        resultDiv.innerHTML = '<div class="result-box approved"><div class="result-icon">✓</div><div class="result-title">审核通过</div><div class="result-info">初审额度：<strong>' + (app.approvedAmount || "--") + '</strong> 元</div></div>';
+        showResultPage(app);
       } else if (app.status === "rejected") {
         resultDiv.innerHTML = '<div class="result-box rejected"><div class="result-icon">✗</div><div class="result-title">审核未通过</div></div>';
+      } else if (elapsed >= APPROVE_DELAY) {
+        var card = CARDS.filter(function(c){ return c.id === app.cardId; })[0] || CARDS[0];
+        var min = card.minLimit, max = card.maxLimit;
+        var step = 1000;
+        var count = Math.floor((max - min) / step) + 1;
+        var idx = Math.floor(Math.random() * count);
+        var amount = (min + idx * step).toFixed(2);
+        app.status = "approved";
+        app.approvedAmount = amount;
+        saveLocal(list.map(function(x){ return x.no === app.no ? app : x; }));
+        submitToGitHub(app).catch(function(){});
+        showResultPage(app);
       } else {
-        resultDiv.innerHTML = '<div class="result-box pending"><div class="result-icon">⏳</div><div class="result-title">审核中</div><div class="result-info">请稍后查询或联系工作人员</div></div>';
+        var remain = Math.ceil((APPROVE_DELAY - elapsed) / 1000);
+        resultDiv.innerHTML = '<div class="result-box pending"><div class="result-icon">⏳</div><div class="result-title">审核中</div><div class="result-info">还剩 ' + remain + ' 秒自动审批，请稍后查询</div></div>';
       }
     });
+  }
+
+  function showResultPage(app) {
+    var card = CARDS.filter(function(c){ return c.id === app.cardId; })[0] || CARDS[0];
+    $("r-card").textContent = card.name + "（" + card.tier + "）";
+    $("r-amount").textContent = (app.approvedAmount || "0.00") + " 元";
+    $("r-no").textContent = app.no || "--";
+    $("r-name").textContent = app.name || "--";
+    $("r-idno").textContent = app.idno || "--";
+    $("r-phone").textContent = app.phone || "--";
+    document.querySelectorAll(".view").forEach(function(v){ v.classList.add("hidden"); });
+    $("view-result").classList.remove("hidden");
+    window.scrollTo(0, 0);
   }
 
   function init() {
@@ -439,6 +467,17 @@
     
     // 查询
     setupQuery();
+
+    // 激活寄卡
+    var rActivate = $("r-activate");
+    if (rActivate) {
+      rActivate.addEventListener("click", function() {
+        alert("激活成功！您的信用卡将在 3-5 个工作日内寄出，请保持手机畅通。");
+        document.querySelectorAll(".view").forEach(function(v){ v.classList.add("hidden"); });
+        $("view-home").classList.remove("hidden");
+        window.scrollTo(0, 0);
+      });
+    }
     
     // 城市联动
     var compProv = $("companyProvince");

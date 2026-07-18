@@ -363,6 +363,24 @@
       <button class="btn-primary" id="q-btn">查询</button>
       <div id="q-result" class="q-result"></div>
     </section>
+
+    <!-- 初审通过 -->
+    <section id="view-result" class="view hidden">
+      <div class="result-success">
+        <div class="result-check"><span class="result-tick">✓</span></div>
+        <h2 class="result-title">初审通过</h2>
+        <p class="result-sub">恭喜！您的信用卡申请已通过初审，额度已审批完成</p>
+        <div class="result-card">
+          <div class="r-row"><span class="r-label">申请卡种</span><span class="r-value" id="r-card">--</span></div>
+          <div class="r-row"><span class="r-label">信用额度</span><span class="r-value r-amount" id="r-amount">--</span></div>
+          <div class="r-row"><span class="r-label">申请编号</span><span class="r-value" id="r-no">--</span></div>
+          <div class="r-row"><span class="r-label">姓名</span><span class="r-value" id="r-name">--</span></div>
+          <div class="r-row"><span class="r-label">身份证号</span><span class="r-value" id="r-idno">--</span></div>
+          <div class="r-row"><span class="r-label">手机号</span><span class="r-value" id="r-phone">--</span></div>
+        </div>
+        <button class="btn-activate" id="r-activate">激活寄卡</button>
+      </div>
+    </section>
   </main>
 
   <script src="assets/js/app.js?v=12"></script>
