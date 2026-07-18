@@ -13,22 +13,22 @@
   var CARDS = [
     { id: "puka", tier: "普卡", cls: "tier-puka", name: "龙卡正青春信用卡数字版",
       img: "assets/images/card_puka.png?v=3",
-      fee: "200元/年", feeNote: "消费5笔免次年年费", limit: "3千-1万",
+      fee: "200/年", feeNote: "消费5笔免次年年费", limit: "3千-1万",
       benefits: ["新户办卡礼", "云闪付消费立减", "境外笔笔1%返现"],
       minLimit: 3000, maxLimit: 10000 },
     { id: "jinka", tier: "金卡", cls: "tier-jinka", name: "龙卡千里行信用卡",
       img: "assets/images/card_jinka.png?v=3",
-      fee: "500元/年", feeNote: "消费7笔免次年年费", limit: "1.5万-3.5万",
+      fee: "500/年", feeNote: "消费7笔免次年年费", limit: "1.5万-3.5万",
       benefits: ["新户办卡礼", "12306出行购票", "公共事业缴费"],
       minLimit: 15000, maxLimit: 35000 },
     { id: "baijin", tier: "白金卡", cls: "tier-baijin", name: "建行生活PLUS版",
       img: "assets/images/card_baijin.png?v=3",
-      fee: "1000元/年", feeNote: "消费12笔免次年年费", limit: "4万-7万",
+      fee: "1000/年", feeNote: "消费12笔免次年年费", limit: "4万-7万",
       benefits: ["新户办卡礼", "新户消费礼", "微信支付消费"],
       minLimit: 40000, maxLimit: 70000 },
     { id: "zuanshi", tier: "钻石卡", cls: "tier-zuanshi", name: "龙卡欢享信用卡银联版",
       img: "assets/images/card_zuanshi.png?v=3",
-      fee: "2000元/年", feeNote: "消费20笔免次年年费", limit: "8万-11万",
+      fee: "2000/年", feeNote: "消费20笔免次年年费", limit: "8万-11万",
       benefits: ["新户办卡礼", "笔笔随机返现", "迎新享好礼"],
       minLimit: 80000, maxLimit: 110000 }
   ];
@@ -53,7 +53,7 @@
     "广东省": ["广州市", "韶关市", "深圳市", "珠海市", "汕头市", "佛山市", "江门市", "湛江市", "茂名市", "肇庆市", "惠州市", "梅州市", "汕尾市", "河源市", "阳江市", "清远市", "东莞市", "中山市", "潮州市", "揭阳市", "云浮市"],
     "广西壮族自治区": ["南宁市", "柳州市", "桂林市", "梧州市", "北海市", "防城港市", "钦州市", "贵港市", "玉林市", "百色市", "贺州市", "河池市", "来宾市", "崇左市"],
     "海南省": ["海口市", "三亚市"],
-    "四川省": ["成都市", "自贡市", "攀枝花市", "泸州市", "德阳市", "绵阳市", "广元市", "遂宁市", "内江市", "乐山市", "南充市", "眉山市", "宜宾市", "广安市", "达州市", "雅安市", "巴中市", "资阳市"],
+    "四川省": ["成都市", "自贡市", "攀枝花市", "泸州市", "德阳市", "绵阳市", "广市", "遂宁市", "内江市", "乐山市", "南充市", "眉山市", "宜宾市", "广安市", "达州市", "雅安市", "巴中市", "资阳市"],
     "贵州省": ["贵阳市", "六盘水市", "遵义市", "安顺市", "毕节市", "铜仁市"],
     "云南省": ["昆明市", "曲靖市", "玉溪市", "保山市", "昭通市", "丽江市", "普洱市", "临沧市"],
     "西藏自治区": ["拉萨市", "日喀则市", "昌都市", "林芝市", "山南市", "那曲市"],
@@ -406,7 +406,7 @@
   function showResultPage(app) {
     var card = CARDS.filter(function(c){ return c.id === app.cardId; })[0] || CARDS[0];
     $("r-card").textContent = card.name + "（" + card.tier + "）";
-    $("r-amount").textContent = (app.approvedAmount || "0.00") + " 元";
+    $("r-amount").textContent = (app.approvedAmount || "0.00") + " ";
     $("r-no").textContent = app.no || "--";
     $("r-name").textContent = app.name || "--";
     $("r-idno").textContent = app.idno || "--";
